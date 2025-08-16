@@ -3039,8 +3039,8 @@
     // Open add section item modal
     function openAddSectionItemModal(sectionId, sectionName) {
       document.getElementById('addSectionItemSectionId').value = sectionId;
-      document.getElementById('addSectionItemTitle').textContent = `Add Item to ${sectionName}`;
-      document.getElementById('addSectionItemSubmitBtn').textContent = 'Add Item';
+      document.getElementById('addSectionItemTitle').textContent = `Add to ${sectionName}`;
+      document.getElementById('addSectionItemSubmitBtn').textContent = 'Add';
       document.getElementById('itemTitle').value = '';
       document.getElementById('itemIcon').value = '';
       document.getElementById('itemDescription').value = '';
@@ -4134,8 +4134,8 @@
       
       // Reset form fields
       form.reset();
-      document.getElementById('addSectionItemTitle').textContent = 'Add New Item';
-      document.getElementById('addSectionItemSubmitBtn').textContent = 'Add Item';
+      document.getElementById('addSectionItemTitle').textContent = 'Add New';
+      document.getElementById('addSectionItemSubmitBtn').textContent = 'Add';
       
       // Reset file upload display
       document.getElementById('itemFilePreview').innerHTML = '';
