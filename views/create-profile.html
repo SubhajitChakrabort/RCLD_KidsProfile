@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Create Your Profile - Fun Portfolio!</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'comic': ['"Comic Sans MS"', '"Comic Sans"', 'cursive', 'sans-serif'],
+          },
+          colors: {
+            'dark-bg': '#181c2f',
+            'card-bg': '#1e223c',
+            'item-bg': '#23264a',
+            'cyan-custom': '#4fc3f7',
+            'orange-custom': '#ffb74d',
+            'red-custom': '#ff7043',
+            'purple-custom': '#ba68c8',
+            'yellow-custom': '#ffd54f',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: twinkle linear infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 0.2; }
+    }
+
+    .create-form {
+      background: rgba(30, 34, 60, 0.95);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .input-field {
+      background: #23264a;
+      color: white;
+      border: 1px solid #4fc3f7;
+      border-radius: 8px;
+      padding: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .input-field:focus {
+      border-color: #ffb74d;
+      box-shadow: 0 0 10px rgba(255, 183, 77, 0.3);
+      outline: none;
+    }
+
+    .create-btn {
+      background: linear-gradient(45deg, #4fc3f7, #ffb74d);
+      transition: all 0.3s ease;
+    }
+
+    .create-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(79, 195, 247, 0.4);
+    }
+
+    .fun-icon {
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Toast Notification Styles */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: #1e223c;
+      color: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border-left: 4px solid;
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+      pointer-events: auto;
+      max-width: 350px;
+      word-wrap: break-word;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    .toast.success {
+      border-left-color: #4ade80;
+      background: linear-gradient(135deg, #1e223c 0%, #23264a 100%);
+    }
+
+    .toast.error {
+      border-left-color: #f87171;
+      background: linear-gradient(135deg, #1e223c 0%, #2d1b1b 100%);
+    }
+
+    .toast.info {
+      border-left-color: #60a5fa;
+      background: linear-gradient(135deg, #1e223c 0%, #1e3a8a 100%);
+    }
+
+    .toast.warning {
+      border-left-color: #fbbf24;
+      background: linear-gradient(135deg, #1e223c 0%, #451a03 100%);
+    }
+
+    .toast-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .toast-title {
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: #9ca3af;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+
+    .toast-close:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .toast-message {
+      font-size: 13px;
+      line-height: 1.4;
+      color: #d1d5db;
+    }
+
+    .toast-icon {
+      font-size: 16px;
+    }
+
+    .toast.success .toast-icon {
+      color: #4ade80;
+    }
+
+    .toast.error .toast-icon {
+      color: #f87171;
+    }
+
+    .toast.info .toast-icon {
+      color: #60a5fa;
+    }
+
+    .toast.warning .toast-icon {
+      color: #fbbf24;
+    }
+
+    /* Custom Scrollbar Styles */
+    /* Webkit browsers (Chrome, Safari, Edge) */
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(30, 34, 60, 0.3);
+      border-radius: 10px;
+      margin: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #4fc3f7, #ffb74d);
+      border-radius: 10px;
+      border: 2px solid rgba(30, 34, 60, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #ffb74d, #4fc3f7);
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
+    }
+
+    ::-webkit-scrollbar-corner {
+      background: rgba(30, 34, 60, 0.3);
+      border-radius: 10px;
+    }
+
+    /* Firefox */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: #4fc3f7 rgba(30, 34, 60, 0.3);
+    }
+
+    /* Mobile scrollbar optimization */
+    @media (max-width: 768px) {
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(30, 34, 60, 0.2);
+        margin: 2px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #4fc3f7, #ffb74d);
+        border: 1px solid rgba(30, 34, 60, 0.3);
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #ffb74d, #4fc3f7);
+      }
+    }
+
+    /* Smooth scrolling for all elements */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Custom scrollbar for specific containers */
+    .custom-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: #4fc3f7 rgba(30, 34, 60, 0.3);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(30, 34, 60, 0.2);
+      border-radius: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #4fc3f7, #ffb74d);
+      border-radius: 8px;
+      border: 1px solid rgba(30, 34, 60, 0.3);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #ffb74d, #4fc3f7);
+    }
+  </style>
+</head>
+
+<body class="m-0 p-0 bg-dark-bg text-white min-h-screen relative overflow-x-hidden">
+
+  <!-- Animated stars background -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <div class="min-h-screen flex items-center justify-center px-4 z-10 relative">
+    <div class="create-form max-w-md w-full rounded-[30px] p-8">
+      
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <div class="fun-icon text-6xl text-orange-custom mb-4">
+          <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <h1 class="text-3xl font-bold text-cyan-custom mb-2">Create Your Profile!</h1>
+        <p class="text-gray-300">Start your fun portfolio journey today! 🚀</p>
+      </div>
+
+      <!-- Create Profile Form -->
+      <form id="createProfileForm" class="space-y-6">
+        <div>
+          <label class="block text-white mb-2 font-semibold">
+            <i class="fa-solid fa-user text-orange-custom mr-2"></i>
+            Your Name
+          </label>
+          <input 
+            type="text" 
+            id="userName" 
+            class="input-field w-full capitalize" 
+            placeholder="Enter your awesome name!"
+            required
+          >
+        </div>
+
+        <div>
+          <label class="block text-white mb-2 font-semibold">
+            <i class="fa-solid fa-at text-orange-custom mr-2"></i>
+            Username
+          </label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">@</span>
+            <input 
+              type="text" 
+              id="username" 
+              class="input-field w-full pl-8" 
+              placeholder="your_username"
+              pattern="[a-zA-Z0-9_]+"
+              title="Only letters, numbers, and underscores allowed"
+              required
+            >
+          </div>
+          <p class="text-xs text-gray-400 mt-1">
+            <i class="fa-solid fa-info-circle mr-1"></i>
+            Only letters, numbers, and underscores. This will be your profile handle.
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-white mb-2 font-semibold">
+            <i class="fa-solid fa-comment text-orange-custom mr-2"></i>
+            Intro Text
+          </label>
+          <input 
+            type="text" 
+            id="introText" 
+            class="input-field w-full capitalize" 
+            placeholder="Tell us about yourself!"
+            required
+          >
+        </div>
+
+        <div>
+          <label class="block text-white mb-2 font-semibold">
+            <i class="fa-solid fa-star text-orange-custom mr-2"></i>
+            Your Highlights (comma separated)
+          </label>
+          <input 
+            type="text" 
+            id="highlights" 
+            class="input-field w-full" 
+            placeholder="coding, drawing, gaming"
+            required
+          >
+        </div>
+
+        <div>
+          <label class="block text-white mb-2 font-semibold">
+            <i class="fa-solid fa-image text-orange-custom mr-2"></i>
+            Profile Picture (optional)
+          </label>
+          <input 
+            type="file" 
+            id="profilePicture" 
+            name="profilePicture"
+            accept="image/*" 
+            class="input-field w-full"
+          >
+        </div>
+
+        <div>
+          <label class="block text-white mb-2 font-semibold">
+            <i class="fa-solid fa-image text-orange-custom mr-2"></i>
+            Cover Image (optional)
+          </label>
+          <input 
+            type="file" 
+            id="coverImage" 
+            name="coverImage"
+            accept="image/*" 
+            class="input-field w-full"
+          >
+        </div>
+
+                 <button 
+           type="submit" 
+           class="create-btn w-full py-4 rounded-lg font-bold text-dark-bg text-lg"
+         >
+           <i class="fa-solid fa-magic mr-2"></i>
+           Create My Profile!
+         </button>
+       </form>
+
+       <!-- View Existing Profile Section -->
+       <div class="mt-8 pt-6 border-t border-cyan-custom/30">
+         <div class="text-center mb-4">
+           <p class="text-gray-300 text-sm">
+             <i class="fa-solid fa-search text-cyan-custom mr-2"></i>
+             Already have a profile? Enter username to view it
+           </p>
+         </div>
+         
+         <form id="viewProfileForm" class="flex flex-col sm:flex-row gap-3">
+           <input 
+             type="text" 
+             id="profileUrlInput" 
+             class="input-field flex-1 text-sm" 
+             placeholder="@username"
+             required
+           >
+           <button 
+             type="submit" 
+             class="bg-gradient-to-r from-cyan-custom to-orange-custom text-dark-bg px-4 py-3 rounded-lg font-bold hover:from-orange-custom hover:to-cyan-custom transition-all duration-300 text-sm whitespace-nowrap"
+           >
+             <i class="fa-solid fa-eye mr-1"></i>
+             View Profile
+           </button>
+         </form>
+
+         <!-- Loading State for View Profile -->
+         <div id="viewLoadingState" class="hidden text-center mt-3">
+           <div class="animate-spin text-lg text-cyan-custom mb-1">
+             <i class="fa-solid fa-spinner"></i>
+           </div>
+           <p class="text-white text-xs">Loading profile...</p>
+         </div>
+
+         <!-- Error State for View Profile -->
+         <div id="viewErrorState" class="hidden text-center mt-3">
+           <p id="viewErrorMessage" class="text-red-custom text-xs mb-2"></p>
+           <button 
+             id="viewTryAgainBtn" 
+             class="bg-red-custom text-white px-3 py-1 rounded-lg font-bold hover:bg-red-600 transition-colors text-xs"
+           >
+             <i class="fa-solid fa-redo mr-1"></i>
+             Try Again
+           </button>
+         </div>
+       </div>
+
+       <!-- Loading State -->
+       <div id="loadingState" class="hidden text-center mt-6">
+        <div class="animate-spin text-4xl text-cyan-custom mb-4">
+          <i class="fa-solid fa-spinner"></i>
+        </div>
+        <p class="text-white">Creating your awesome profile...</p>
+      </div>
+
+      <!-- Success State -->
+      <div id="successState" class="hidden text-center mt-6">
+        <div class="text-4xl text-green-400 mb-4">
+          <i class="fa-solid fa-check-circle"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">Profile Created Successfully!</h3>
+        <p class="text-gray-300 mb-4">Your profile URLs:</p>
+        <div class="bg-item-bg p-4 rounded-lg mb-4 space-y-3">
+          <div>
+            <p class="text-sm text-gray-400 mb-1">Username URL (recommended):</p>
+            <code id="usernameUrl" class="text-cyan-custom break-all text-sm"></code>
+          </div>
+          <div>
+            <p class="text-sm text-gray-400 mb-1">Profile ID URL:</p>
+            <code id="profileUrl" class="text-gray-500 break-all text-sm"></code>
+          </div>
+        </div>
+        <button 
+          id="copyUrlBtn" 
+          class="bg-cyan-custom text-dark-bg px-6 py-2 rounded-lg font-bold hover:bg-orange-custom transition-colors mr-2"
+        >
+          <i class="fa-solid fa-copy mr-2"></i>
+          Copy URL
+        </button>
+        <button 
+          id="viewProfileBtn" 
+          class="bg-orange-custom text-dark-bg px-6 py-2 rounded-lg font-bold hover:bg-cyan-custom transition-colors"
+        >
+          <i class="fa-solid fa-eye mr-2"></i>
+          View Profile
+        </button>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorState" class="hidden text-center mt-6">
+        <div class="text-4xl text-red-custom mb-4">
+          <i class="fa-solid fa-exclamation-triangle"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">Oops! Something went wrong</h3>
+        <p id="errorMessage" class="text-gray-300 mb-4"></p>
+        <button 
+          id="tryAgainBtn" 
+          class="bg-red-custom text-white px-6 py-2 rounded-lg font-bold hover:bg-red-600 transition-colors"
+        >
+          <i class="fa-solid fa-redo mr-2"></i>
+          Try Again
+        </button>
+      </div>
+
+         </div>
+   </div>
+
+  <script>
+    // Toast Notification System
+    const toast = {
+      show(message, type = 'info', duration = 5000) {
+        const container = document.getElementById('toastContainer');
+        const toastElement = document.createElement('div');
+        const toastId = 'toast-' + Date.now();
+        
+        const icons = {
+          success: 'fa-solid fa-check-circle',
+          error: 'fa-solid fa-exclamation-circle',
+          warning: 'fa-solid fa-exclamation-triangle',
+          info: 'fa-solid fa-info-circle'
+        };
+        
+        const titles = {
+          success: 'Success',
+          error: 'Error',
+          warning: 'Warning',
+          info: 'Info'
+        };
+        
+        toastElement.className = `toast ${type}`;
+        toastElement.id = toastId;
+        toastElement.innerHTML = `
+          <div class="toast-header">
+            <div class="toast-title">
+              <i class="toast-icon ${icons[type]}"></i>
+              ${titles[type]}
+            </div>
+            <button class="toast-close" onclick="toast.hide('${toastId}')">
+              <i class="fa-solid fa-times"></i>
+            </button>
+          </div>
+          <div class="toast-message">${message}</div>
+        `;
+        
+        container.appendChild(toastElement);
+        
+        // Show animation
+        setTimeout(() => {
+          toastElement.classList.add('show');
+        }, 100);
+        
+        // Auto hide
+        if (duration > 0) {
+          setTimeout(() => {
+            this.hide(toastId);
+          }, duration);
+        }
+        
+        return toastId;
+      },
+      
+      hide(toastId) {
+        const toastElement = document.getElementById(toastId);
+        if (toastElement) {
+          toastElement.classList.remove('show');
+          setTimeout(() => {
+            if (toastElement.parentNode) {
+              toastElement.parentNode.removeChild(toastElement);
+            }
+          }, 300);
+        }
+      },
+      
+      success(message, duration = 5000) {
+        return this.show(message, 'success', duration);
+      },
+      
+      error(message, duration = 7000) {
+        return this.show(message, 'error', duration);
+      },
+      
+      warning(message, duration = 6000) {
+        return this.show(message, 'warning', duration);
+      },
+      
+      info(message, duration = 5000) {
+        return this.show(message, 'info', duration);
+      }
+    };
+
+    // Create animated stars
+    const stars = document.getElementById('stars');
+    for (let i = 0; i < 30; i++) {
+      let star = document.createElement("div");
+      star.className = "star";
+      star.style.left = Math.random() * 100 + "vw";
+      star.style.top = Math.random() * 100 + "vh";
+      star.style.animationDuration = 2 + Math.random() * 3 + "s";
+      stars.appendChild(star);
+    }
+
+    // Form handling
+    const form = document.getElementById('createProfileForm');
+    const loadingState = document.getElementById('loadingState');
+    const successState = document.getElementById('successState');
+    const errorState = document.getElementById('errorState');
+
+    // View Profile Form handling
+    const viewForm = document.getElementById('viewProfileForm');
+    const viewLoadingState = document.getElementById('viewLoadingState');
+    const viewErrorState = document.getElementById('viewErrorState');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Show loading
+      form.classList.add('hidden');
+      loadingState.classList.remove('hidden');
+      successState.classList.add('hidden');
+      errorState.classList.add('hidden');
+
+      try {
+        const formData = new FormData();
+        formData.append('name', document.getElementById('userName').value);
+        formData.append('username', document.getElementById('username').value);
+        formData.append('intro_text', document.getElementById('introText').value);
+        formData.append('highlights', document.getElementById('highlights').value);
+        
+        const profilePicture = document.getElementById('profilePicture').files[0];
+        const coverImage = document.getElementById('coverImage').files[0];
+        
+        if (profilePicture) {
+          formData.append('profilePicture', profilePicture);
+        }
+        if (coverImage) {
+          formData.append('coverImage', coverImage);
+        }
+
+        const response = await fetch('/api/profile/create', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to create profile');
+        }
+
+        const result = await response.json();
+        
+        // Show success
+        loadingState.classList.add('hidden');
+        successState.classList.remove('hidden');
+        
+        // Get the username from the form
+        const username = document.getElementById('username').value;
+        
+        // Set both URLs
+        const profileUrl = `${window.location.origin}/profile/${result.profileId}`;
+        const usernameUrl = `${window.location.origin}/@${username}`;
+        
+        document.getElementById('profileUrl').textContent = profileUrl;
+        document.getElementById('usernameUrl').textContent = usernameUrl;
+        
+        // Copy URL button (copies username URL by default)
+        document.getElementById('copyUrlBtn').addEventListener('click', () => {
+          navigator.clipboard.writeText(usernameUrl);
+          toast.success('Username URL copied to clipboard!');
+        });
+        
+        // View Profile button (uses username URL)
+        document.getElementById('viewProfileBtn').addEventListener('click', () => {
+          window.location.href = usernameUrl;
+        });
+
+      } catch (error) {
+        console.error('Error creating profile:', error);
+        
+        // Show error
+        loadingState.classList.add('hidden');
+        errorState.classList.remove('hidden');
+        const errorMsg = error.message || 'Failed to create profile. Please try again.';
+        document.getElementById('errorMessage').textContent = errorMsg;
+        toast.error(errorMsg);
+        
+        // Try again button
+        document.getElementById('tryAgainBtn').addEventListener('click', () => {
+          errorState.classList.add('hidden');
+          form.classList.remove('hidden');
+        });
+      }
+    });
+
+    // View Profile Form Event Listener
+    viewForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const profileUrl = document.getElementById('profileUrlInput').value.trim();
+      
+      if (!profileUrl) {
+        toast.error('Please enter a profile URL');
+        return;
+      }
+
+      // Show loading
+      viewForm.classList.add('hidden');
+      viewLoadingState.classList.remove('hidden');
+      viewErrorState.classList.add('hidden');
+
+      try {
+        let profileId = '';
+        let username = '';
+        
+        // Check if it's a username (starts with @ or just username)
+        if (profileUrl.startsWith('@') || (!profileUrl.includes('/') && !profileUrl.includes('http'))) {
+          // Handle username
+          username = profileUrl.startsWith('@') ? profileUrl.substring(1) : profileUrl;
+          
+          // Test if username exists by making a request
+          const testResponse = await fetch(`/api/profile/username/${username}`);
+          
+          if (!testResponse.ok) {
+            throw new Error('Profile not found. Please check the username.');
+          }
+          
+          const profileData = await testResponse.json();
+          profileId = profileData.profileId;
+          
+          // Redirect to username URL
+          const fullProfileUrl = `${window.location.origin}/@${username}`;
+          window.location.href = fullProfileUrl;
+        } else {
+          // Handle URL format
+          if (profileUrl.includes('/profile/')) {
+            // Extract from /profile/abc123 format
+            const urlParts = profileUrl.split('/profile/');
+            if (urlParts.length > 1) {
+              profileId = urlParts[1].split('?')[0].split('#')[0]; // Remove query params and hash
+            }
+          } else if (profileUrl.includes('profile/')) {
+            // Extract from profile/abc123 format
+            const urlParts = profileUrl.split('profile/');
+            if (urlParts.length > 1) {
+              profileId = urlParts[1].split('?')[0].split('#')[0];
+            }
+          } else {
+            // Assume it's just the profile ID
+            profileId = profileUrl.split('?')[0].split('#')[0];
+          }
+
+          if (!profileId) {
+            throw new Error('Invalid profile URL format');
+          }
+
+          // Test if profile exists by making a request
+          const testResponse = await fetch(`/api/profile/${profileId}`);
+          
+          if (!testResponse.ok) {
+            throw new Error('Profile not found. Please check the URL.');
+          }
+          
+          // Redirect to profile ID URL
+          const fullProfileUrl = `${window.location.origin}/profile/${profileId}`;
+          window.location.href = fullProfileUrl;
+        }
+
+      } catch (error) {
+        console.error('Error viewing profile:', error);
+        
+        // Show error
+        viewLoadingState.classList.add('hidden');
+        viewErrorState.classList.remove('hidden');
+        const errorMsg = error.message || 'Failed to load profile. Please check the URL and try again.';
+        document.getElementById('viewErrorMessage').textContent = errorMsg;
+        toast.error(errorMsg);
+        
+        // Try again button
+        document.getElementById('viewTryAgainBtn').addEventListener('click', () => {
+          viewErrorState.classList.add('hidden');
+          viewForm.classList.remove('hidden');
+        });
+      }
+    });
+  </script>
+</body>
+
+</html> 

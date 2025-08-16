@@ -1,0 +1,4638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Fun Portfolio!</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'comic': ['"Comic Sans MS"', '"Comic Sans"', 'cursive', 'sans-serif'],
+          },
+          colors: {
+            'dark-bg': '#181c2f',
+            'card-bg': '#1e223c',
+            'item-bg': '#23264a',
+            'cyan-custom': '#4fc3f7',
+            'orange-custom': '#ffb74d',
+            'red-custom': '#ff7043',
+            'purple-custom': '#ba68c8',
+            'yellow-custom': '#ffd54f',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Previous styles remain the same */
+    body {
+      font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
+    }
+
+    main {
+      background: rgba(30, 34, 60, 0.95);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    }
+
+    .name {
+      text-shadow: 2px 2px 0 #222, 0 0 8px #4fc3f7aa;
+    }
+
+    .profile {
+      position: absolute;
+      top: 140px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 5px solid #4fc3f7;
+      overflow: hidden;
+      background: #222;
+      box-shadow: 0 4px 16px #0004;
+      transition: border-color 0.3s;
+      cursor: pointer;
+      z-index: 20;
+    }
+
+    .profile-pic {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .profile-pic:hover {
+      border-color: #ffb74d;
+    }
+
+    .profile+h1,
+    .profile+h1+p {
+      margin-top: 80px;
+      text-align: center;
+    }
+
+    /* Mobile responsive adjustments */
+    @media (max-width: 600px) {
+      .profile {
+        width: 120px;
+        height: 120px;
+        top: 120px;
+      }
+      
+      .profile+h1,
+      .profile+h1+p {
+        margin-top: 70px;
+      }
+    }
+
+    .hobbies li:hover,
+    .projects li:hover {
+      background: #4fc3f7;
+      color: #222;
+      transform: scale(1.05) rotate(-2deg);
+    }
+
+    .skill-tag:hover {
+      background: #fff;
+      color: #23264a;
+      transform: scale(1.1) rotate(2deg);
+    }
+
+    .corner-icon {
+      filter: drop-shadow(0 0 8px #ffb74d88);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .star {
+      box-shadow: 0 0 8px #fff8;
+      animation: twinkle linear infinite;
+    }
+
+    @keyframes twinkle {
+
+      0%,
+      100% {
+        opacity: 0.7;
+      }
+
+      50% {
+        opacity: 0.2;
+      }
+    }
+
+    .custom-upload::-webkit-file-upload-button {
+      background: #23264a;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      margin-right: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background: #1e223c;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      min-width: 150px;
+    }
+
+    .dropdown.show {
+      display: block;
+    }
+
+    .dropdown button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 8px 12px;
+      margin: 2px 0;
+      border: none;
+      background: transparent;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .dropdown button:hover {
+      background: #23264a;
+    }
+
+    .edit-form {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .edit-form.show {
+      display: flex;
+    }
+
+    .form-content {
+      background: #1e223c;
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .file-preview {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .highlight-input {
+      background: #23264a;
+      color: white;
+      border: 1px solid #4fc3f7;
+      border-radius: 8px;
+      padding: 8px;
+      margin: 5px;
+      width: 150px;
+    }
+
+    .add-btn {
+      background: #4fc3f7;
+      color: #222;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-left: 10px;
+      transition: all 0.3s ease;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .add-btn:hover {
+      background: #ffb74d;
+      transform: scale(1.1) rotate(90deg);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Cover Image Styles */
+    .cover-image-container {
+      position: relative;
+      width: 100%;
+      height: 180px;
+      margin-bottom: 0;
+      border-radius: 20px 20px 0 0;
+      overflow: visible;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .cover-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .cover-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cover-image-upload {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #4fc3f7;
+      color: #222;
+      padding: 8px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .cover-image-upload:hover {
+      background: #ffb74d;
+    }
+
+    /* Memory Grid Styles */
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+    }
+
+    .memory-item {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      background: #23264a;
+    }
+
+    .memory-item:hover {
+      transform: scale(1.05);
+    }
+
+    .memory-item img,
+    .memory-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .memory-item .play-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .memory-item .delete-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(255, 112, 67, 0.8);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .memory-item:hover .delete-btn {
+      opacity: 1;
+    }
+
+    /* Media Viewer Modal */
+    .media-viewer {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 3000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .media-viewer.show {
+      display: flex;
+    }
+
+    .media-content {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .media-content img,
+    .media-content video {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 10px;
+    }
+
+    .close-viewer {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    .close-viewer:hover {
+      color: #ff7043;
+    }
+
+    /* Upload Memory Form Styles */
+    .upload-memory-form {
+      background: #23264a;
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 15px;
+      border: 2px dashed #4fc3f7;
+    }
+
+    .upload-area {
+      border: 2px dashed #4fc3f7;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(79, 195, 247, 0.1);
+    }
+
+    .upload-area:hover {
+      background: rgba(79, 195, 247, 0.2);
+      border-color: #ffb74d;
+    }
+
+    .upload-area.dragover {
+      background: rgba(79, 195, 247, 0.3);
+      border-color: #ffb74d;
+    }
+
+    .memory-upload-preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .memory-upload-preview .preview-item {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #1e223c;
+    }
+
+    .memory-upload-preview img,
+    .memory-upload-preview video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .memory-upload-preview .remove-preview {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .file-icon-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      font-size: 2.5rem;
+      color: #4fc3f7;
+    }
+    .memory-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(30,34,60,0.85);
+      color: #fff;
+      font-size: 0.95rem;
+      text-align: center;
+      padding: 2px 0 2px 0;
+      border-radius: 0 0 10px 10px;
+      z-index: 2;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    .hobby-item,
+    .project-item,
+    .certificate-item,
+    .achievement-item,
+    .adventure-item {
+      transition: background 0.3s, color 0.3s, transform 0.3s;
+      box-shadow: 0 2px 8px #0002;
+      display: inline-block;
+      margin: 8px 0;
+      border-radius: 16px;
+      padding: 8px 16px;
+      background: #23264a;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+    .hobby-item:hover,
+    .project-item:hover,
+    .certificate-item:hover,
+    .achievement-item:hover,
+    .adventure-item:hover {
+      background: #4fc3f7;
+      color: #222;
+      transform: scale(1.05) rotate(-2deg);
+    }
+
+    /* Toast Notification Styles */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: #1e223c;
+      color: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border-left: 4px solid;
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+      pointer-events: auto;
+      max-width: 350px;
+      word-wrap: break-word;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    .toast.success {
+      border-left-color: #4ade80;
+      background: linear-gradient(135deg, #1e223c 0%, #23264a 100%);
+    }
+
+    .toast.error {
+      border-left-color: #f87171;
+      background: linear-gradient(135deg, #1e223c 0%, #2d1b1b 100%);
+    }
+
+    .toast.info {
+      border-left-color: #60a5fa;
+      background: linear-gradient(135deg, #1e223c 0%, #1e3a8a 100%);
+    }
+
+    .toast.warning {
+      border-left-color: #fbbf24;
+      background: linear-gradient(135deg, #1e223c 0%, #451a03 100%);
+    }
+
+    .toast-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .toast-title {
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: #9ca3af;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+
+    .toast-close:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .toast-message {
+      font-size: 13px;
+      line-height: 1.4;
+      color: #d1d5db;
+    }
+
+    .toast-icon {
+      font-size: 16px;
+    }
+
+    .toast.success .toast-icon {
+      color: #4ade80;
+    }
+
+    .toast.error .toast-icon {
+      color: #f87171;
+    }
+
+    .toast.info .toast-icon {
+      color: #60a5fa;
+    }
+
+    .toast.warning .toast-icon {
+      color: #fbbf24;
+    }
+
+    /* Custom Scrollbar Styles */
+    /* Webkit browsers (Chrome, Safari, Edge) */
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(30, 34, 60, 0.3);
+      border-radius: 10px;
+      margin: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #4fc3f7, #ffb74d);
+      border-radius: 10px;
+      border: 2px solid rgba(30, 34, 60, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #ffb74d, #4fc3f7);
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
+    }
+
+    ::-webkit-scrollbar-corner {
+      background: rgba(30, 34, 60, 0.3);
+      border-radius: 10px;
+    }
+
+    /* Firefox */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: #4fc3f7 rgba(30, 34, 60, 0.3);
+    }
+
+    /* Mobile scrollbar optimization */
+    @media (max-width: 768px) {
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(30, 34, 60, 0.2);
+        margin: 2px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #4fc3f7, #ffb74d);
+        border: 1px solid rgba(30, 34, 60, 0.3);
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #ffb74d, #4fc3f7);
+      }
+    }
+
+    /* Smooth scrolling for all elements */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Custom scrollbar for specific containers */
+    .custom-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: #4fc3f7 rgba(30, 34, 60, 0.3);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(30, 34, 60, 0.3);
+      border-radius: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #4fc3f7, #ffb74d);
+      border-radius: 8px;
+      border: 1px solid rgba(30, 34, 60, 0.3);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #ffb74d, #4fc3f7);
+    }
+
+
+
+
+
+    /* Cinematic Slideshow Styles */
+    .cinema-frame {
+      position: relative;
+      padding: 12px;
+      background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+      border-radius: 16px;
+      box-shadow: 
+        0 15px 35px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        inset 0 -1px 0 rgba(0,0,0,0.3);
+      border: 1px solid #444;
+    }
+
+    .cinema-screen {
+      position: relative;
+      background: linear-gradient(145deg, #000, #1a1a1a);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 
+        inset 0 2px 6px rgba(0,0,0,0.6),
+        0 0 25px rgba(79, 195, 247, 0.15);
+      border: 1px solid #555;
+    }
+
+    .slideshow-container {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 
+        0 0 30px rgba(0,0,0,0.8),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .slideshow-images {
+      display: flex;
+      transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .slideshow-image {
+      min-width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slideshow-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.05);
+      transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .slideshow-image:hover img {
+      transform: scale(1.08);
+    }
+
+    .slideshow-image-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      color: white;
+      padding: 20px 15px 15px;
+      font-size: 1rem;
+      text-align: center;
+      font-weight: 500;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      backdrop-filter: blur(5px);
+    }
+
+    .cinematic-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .screen-reflection {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 30%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+      border-radius: 10px 10px 0 0;
+    }
+
+    .screen-glow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at center, rgba(79, 195, 247, 0.1) 0%, transparent 70%);
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+
+    .slideshow-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      border: 2px solid transparent;
+      backdrop-filter: blur(5px);
+    }
+
+    .slideshow-indicator:hover {
+      background: rgba(255,255,255,0.6);
+      transform: scale(1.1);
+    }
+
+    .slideshow-indicator.active {
+      background: linear-gradient(45deg, #4fc3f7, #ff9800);
+      transform: scale(1.3);
+      box-shadow: 0 0 15px rgba(79, 195, 247, 0.6);
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    .slideshow-nav {
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .slideshow-nav:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(79, 195, 247, 0.4);
+    }
+
+    .slideshow-container:hover .slideshow-nav {
+      opacity: 1;
+    }
+
+    .progress-bar-container {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+    }
+
+    .progress-bar {
+      width: 0%;
+      background: linear-gradient(90deg, #4fc3f7, #ff9800, #4fc3f7);
+      background-size: 200% 100%;
+      animation: progressGradient 2s linear infinite;
+    }
+
+    @keyframes progressGradient {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 200% 0%; }
+    }
+
+    @media (max-width: 600px) {
+      .cinema-frame {
+        padding: 15px;
+      }
+      
+      .cinema-screen {
+        padding: 10px;
+      }
+      
+      .slideshow-container {
+        height: 180px;
+      }
+      
+      .slideshow-nav {
+        opacity: 1;
+        padding: 8px;
+      }
+      
+      .slideshow-image-overlay {
+        padding: 15px 10px 10px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Item Action Buttons Styles */
+    .item-edit-btn,
+    .item-delete-btn {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      transition: all 0.2s ease;
+    }
+
+    .item-edit-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .item-delete-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    /* Mobile adjustments for item buttons */
+    @media (max-width: 600px) {
+      .item-edit-btn,
+      .item-delete-btn {
+        opacity: 1 !important;
+        padding: 6px !important;
+        font-size: 0.8rem !important;
+      }
+    }
+
+    /* Stylish File Upload Styles */
+    .file-upload-container {
+      position: relative;
+    }
+
+    .file-upload-area {
+      background: linear-gradient(135deg, rgba(79, 195, 247, 0.1) 0%, rgba(255, 183, 77, 0.1) 100%);
+      border: 2px dashed rgba(79, 195, 247, 0.5);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .file-upload-area:hover {
+      border-color: rgba(255, 183, 77, 0.7);
+      background: linear-gradient(135deg, rgba(79, 195, 247, 0.2) 0%, rgba(255, 183, 77, 0.2) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(79, 195, 247, 0.2);
+    }
+
+    .upload-icon {
+      margin-bottom: 16px;
+    }
+
+    .upload-icon i {
+      font-size: 48px;
+      color: #4fc3f7;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.05); }
+    }
+
+    .upload-btn {
+      background: linear-gradient(45deg, #4fc3f7, #ffb74d);
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(79, 195, 247, 0.3);
+    }
+
+    .upload-btn:hover {
+      background: linear-gradient(45deg, #ffb74d, #4fc3f7);
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(255, 183, 77, 0.4);
+    }
+
+    .upload-btn:active {
+      transform: scale(0.98);
+    }
+
+    #selectedFileName {
+      margin-top: 16px;
+      padding: 8px 12px;
+      background: rgba(79, 195, 247, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(79, 195, 247, 0.3);
+    }
+
+    #selectedFileName.show {
+      display: block !important;
+    }
+
+    /* File Preview Styles */
+    .file-preview {
+      max-width: 100px;
+      max-height: 100px;
+      border-radius: 8px;
+      border: 2px solid #4fc3f7;
+      object-fit: cover;
+    }
+
+    .file-preview-container {
+      background: rgba(79, 195, 247, 0.1);
+      border: 1px solid rgba(79, 195, 247, 0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+
+<body class="m-0 p-0 bg-dark-bg text-white min-h-screen relative overflow-x-hidden">
+
+  <!-- Animated stars background -->
+  <div class="stars fixed top-0 left-0 w-screen h-screen pointer-events-none z-0"></div>
+
+  <!-- User Profile Dropdown -->
+  <div class="fixed top-5 right-5 z-20">
+    <div class="relative">
+      <button id="profileDropdownBtn" class="text-2xl text-orange-custom hover:text-cyan-custom transition-colors">
+        <i class="fa-solid fa-user-circle"></i>
+      </button>
+      <div id="profileDropdown" class="dropdown">
+        <button id="editProfileBtn" class="text-white hover:text-orange-custom transition-colors">
+          <i class="fa-solid fa-edit"></i> Edit Profile
+        </button>
+        <!-- <button id="uploadMemoryBtn" class="text-white hover:text-orange-custom transition-colors">
+          <i class="fa-solid fa-camera"></i> Upload Memory
+        </button> -->
+        <button id="addSectionBtn" class="text-white hover:text-orange-custom transition-colors">
+          <i class="fa-solid fa-plus"></i> Add Section
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Fun corner icon -->
+  <div class="corner-icon fixed bottom-[18px] right-[18px] text-[2.2rem] sm:text-[2.2rem] text-orange-custom z-10">
+    <i class="fa-solid fa-cube"></i>
+  </div>
+
+  <main class="max-w-[500px] mx-auto mt-[60px] mb-[30px] rounded-[30px] py-[40px] px-[20px] z-10 relative 
+                 max-[600px]:max-w-[98vw] max-[600px]:px-[2vw] max-[600px]:py-[30px] max-[600px]:pt-[10px]">
+
+    <!-- Cover Image Section -->
+    <section class="cover-image-container">
+      <img id="coverImage" src="/uploads/default_cover.jpg" alt="Cover Image" class="cover-image cursor-pointer hover:opacity-90 transition-opacity">
+      <input id="coverImageInput" type="file" accept="image/*" class="hidden">
+    </section>
+
+    <section>
+      <div class="profile" title="Profile Picture">
+        <img id="profilePic" src="user.jpg" alt="User" class="profile-pic cursor-pointer hover:opacity-90 transition-opacity" />
+      </div>
+      <h1 id="userName" class="name text-[1.8rem] font-bold text-cyan-custom m-0 mb-[10px] tracking-[1px] leading-tight capitalize
+             max-[600px]:text-[1.5rem] max-[600px]:tracking-[0.5px]">
+        Loading...
+      </h1>
+      <p class="intro text-[1.2rem] text-white mb-0">
+        <span id="introText">Loading...</span>
+        <span id="highlightsPrefix">& I love to do </span><span id="highlightsContainer"></span>!
+      </p>
+    </section>
+
+
+        <!-- Photo Slideshow Section -->
+    <section class="slideshow-section mt-[20px] mb-[30px]">
+
+      <div class="cinema-frame">
+        <div class="cinema-screen">
+          <div class="slideshow-container relative h-[250px] overflow-hidden">
+            <div id="slideshowImages" class="slideshow-images h-full">
+              <!-- Images will be loaded here dynamically -->
+      </div>
+            
+            <!-- Cinematic Overlay -->
+            <div class="cinematic-overlay">
+              <div class="screen-reflection"></div>
+              <div class="screen-glow"></div>
+      </div>
+            
+            <!-- Slideshow Navigation -->
+            <button id="slideshowPrev" class="slideshow-nav absolute left-4 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-black to-transparent text-white p-3 rounded-r-full hover:bg-opacity-90 transition-all z-10 backdrop-blur-sm">
+              <i class="fa-solid fa-chevron-left text-xl"></i>
+        </button>
+            <button id="slideshowNext" class="slideshow-nav absolute right-4 top-1/2 transform -translate-y-1/2 bg-gradient-to-l from-black to-transparent text-white p-3 rounded-l-full hover:bg-opacity-90 transition-all z-10 backdrop-blur-sm">
+              <i class="fa-solid fa-chevron-right text-xl"></i>
+        </button>
+            
+            <!-- Slideshow Indicators -->
+            <div id="slideshowIndicators" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-3 z-10">
+              <!-- Indicators will be added dynamically -->
+      </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-bar-container absolute bottom-0 left-0 right-0 h-1 bg-black bg-opacity-30 z-10">
+              <div id="slideshowProgress" class="progress-bar h-full bg-gradient-to-r from-cyan-custom to-orange-custom transition-all duration-300 ease-out"></div>
+      </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dynamic Sections Container -->
+    <div id="dynamicSectionsContainer">
+      <!-- All sections (hobbies, skills, projects, etc.) will be loaded here dynamically -->
+      </div>
+
+    <!-- Memories Section -->
+    <!-- <section class="fun-section mt-[30px] p-0">
+      <div class="section-header">
+        <div class="flex items-center gap-2">
+          <button id="memoriesLeftArrow" class="arrow-btn mr-2 text-cyan-custom hover:text-orange-custom transition-all text-xl" style="transition: transform 0.3s;">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <h2 id="memoriesSectionTitle" class="section-title text-[1.5rem] text-orange-custom tracking-[1px] max-[600px]:text-[1.1rem]">
+            <i class="fa-solid fa-images"></i> <span id="memoriesSectionTitleText">My Memories</span>
+          </h2>
+          <button id="memoriesRightArrow" class="arrow-btn ml-2 text-cyan-custom hover:text-orange-custom transition-all text-xl" style="transition: transform 0.3s;">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+      <div id="memoriesGrid" class="memory-grid">
+        <!-- Dynamic memories will be loaded here -->
+      </div>
+      <!-- <div class="text-center mt-4">
+        <button id="loadMoreMemoriesBtn"
+          class="bg-cyan-custom text-dark-bg font-bold px-6 py-2 rounded-lg hover:bg-orange-custom transition-all">
+          Load More
+        </button>
+      </div> -->
+    </section>
+  </main>
+
+  <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="edit-form">
+    <div class="form-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl text-orange-custom">Edit Profile</h2>
+        <button id="closeEditModal" class="text-white hover:text-red-custom text-xl">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <form id="editProfileForm">
+        <div class="mb-4">
+          <label class="block text-white mb-2">Name:</label>
+          <input type="text" id="editName" class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom capitalize"
+            required>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-white mb-2">Username:</label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">@</span>
+            <input type="text" id="editUsername" class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom pl-8"
+              pattern="[a-zA-Z0-9_]+"
+              title="Only letters, numbers, and underscores allowed"
+              required>
+          </div>
+          <p class="text-xs text-gray-400 mt-1">
+            <i class="fa-solid fa-info-circle mr-1"></i>
+            Only letters, numbers, and underscores. This is your profile handle.
+          </p>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-white mb-2">Intro Text:</label>
+          <input type="text" id="editIntroText"
+            class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom" required>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-white mb-2">Highlights:</label>
+          <div id="highlightsInputs" class="flex flex-wrap gap-2 mb-2">
+            <!-- Dynamic highlight inputs -->
+          </div>
+          <button type="button" id="addHighlight" class="text-cyan-custom hover:text-orange-custom">
+            <i class="fa-solid fa-plus"></i> Add Highlight
+          </button>
+        </div>
+
+        <!-- Copy Profile URL Section -->
+        <div class="mb-6">
+          <label class="block text-white mb-3 font-semibold">
+            <i class="fa-solid fa-link text-orange-custom mr-2"></i>
+            Your Profile URL
+          </label>
+          
+          <div class="bg-item-bg border border-cyan-custom/30 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <p class="text-sm text-gray-400 mb-1">Share your profile with others</p>
+                <div class="flex items-center gap-2">
+                  <i class="fa-solid fa-globe text-cyan-custom"></i>
+                  <code id="profileUrlDisplay" class="text-cyan-custom text-sm break-all font-mono">
+                    Loading...
+                  </code>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                id="copyProfileUrlBtn"
+                class="bg-gradient-to-r from-cyan-custom to-orange-custom text-dark-bg px-4 py-2 rounded-lg font-bold hover:from-orange-custom hover:to-cyan-custom transition-all duration-300 text-sm whitespace-nowrap ml-3"
+              >
+                <i class="fa-solid fa-copy mr-1"></i>
+                Copy URL
+              </button>
+        </div>
+
+            <!-- Copy Success Message -->
+            <div id="copySuccessMessage" class="hidden mt-3 p-2 bg-green-500/20 border border-green-500/30 rounded text-green-400 text-sm text-center">
+              <i class="fa-solid fa-check-circle mr-1"></i>
+              URL copied to clipboard!
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-white mb-3 font-semibold">
+            <i class="fa-solid fa-user text-orange-custom mr-2"></i>
+            Profile Picture
+          </label>
+          
+          <!-- Stylish File Upload Container -->
+          <div class="file-upload-container relative">
+            <div class="file-upload-area bg-gradient-to-r from-cyan-custom/10 to-orange-custom/10 border-2 border-dashed border-cyan-custom/50 rounded-xl p-6 text-center transition-all duration-300 hover:border-orange-custom/70 hover:from-cyan-custom/20 hover:to-orange-custom/20">
+              
+              <!-- Upload Icon -->
+              <div class="upload-icon mb-4">
+                <i class="fa-solid fa-user-circle text-4xl text-cyan-custom animate-pulse"></i>
+              </div>
+              
+              <!-- Upload Text -->
+              <div class="upload-text mb-4">
+                <h3 class="text-lg font-semibold text-white mb-2">Choose a profile picture</h3>
+                <p class="text-gray-400 text-sm">Upload your best photo</p>
+              </div>
+              
+              <!-- File Input (Hidden) -->
+              <input 
+                type="file" 
+                id="editProfilePic" 
+                accept="image/*" 
+                class="hidden"
+              >
+              
+              <!-- Custom Upload Button -->
+              <button 
+                type="button" 
+                onclick="document.getElementById('editProfilePic').click()"
+                class="upload-btn bg-gradient-to-r from-cyan-custom to-orange-custom text-white px-6 py-3 rounded-lg font-bold hover:from-orange-custom hover:to-cyan-custom transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+              >
+                <i class="fa-solid fa-folder-open mr-2"></i>
+                Browse Photos
+              </button>
+              
+              <!-- Selected File Display -->
+              <div id="selectedProfilePicName" class="mt-4 text-sm text-cyan-custom hidden">
+                <i class="fa-solid fa-check-circle mr-2"></i>
+                <span id="profilePicNameText"></span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- File Preview -->
+          <div id="profilePicPreview" class="mt-4"></div>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-white mb-3 font-semibold">
+            <i class="fa-solid fa-image text-orange-custom mr-2"></i>
+            Cover Image
+          </label>
+          
+          <!-- Stylish File Upload Container -->
+          <div class="file-upload-container relative">
+            <div class="file-upload-area bg-gradient-to-r from-cyan-custom/10 to-orange-custom/10 border-2 border-dashed border-cyan-custom/50 rounded-xl p-6 text-center transition-all duration-300 hover:border-orange-custom/70 hover:from-cyan-custom/20 hover:to-orange-custom/20">
+              
+              <!-- Upload Icon -->
+              <div class="upload-icon mb-4">
+                <i class="fa-solid fa-image text-4xl text-cyan-custom animate-pulse"></i>
+              </div>
+              
+              <!-- Upload Text -->
+              <div class="upload-text mb-4">
+                <h3 class="text-lg font-semibold text-white mb-2">Choose a cover image</h3>
+                <p class="text-gray-400 text-sm">Make your profile stand out</p>
+              </div>
+              
+              <!-- File Input (Hidden) -->
+              <input 
+                type="file" 
+                id="editCoverImage" 
+                accept="image/*" 
+                class="hidden"
+              >
+              
+              <!-- Custom Upload Button -->
+              <button 
+                type="button" 
+                onclick="document.getElementById('editCoverImage').click()"
+                class="upload-btn bg-gradient-to-r from-cyan-custom to-orange-custom text-white px-6 py-3 rounded-lg font-bold hover:from-orange-custom hover:to-cyan-custom transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+              >
+                <i class="fa-solid fa-folder-open mr-2"></i>
+                Browse Images
+              </button>
+              
+              <!-- Selected File Display -->
+              <div id="selectedCoverImageName" class="mt-4 text-sm text-cyan-custom hidden">
+                <i class="fa-solid fa-check-circle mr-2"></i>
+                <span id="coverImageNameText"></span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- File Preview -->
+          <div id="coverImagePreview" class="mt-4"></div>
+        </div>
+
+        <div class="flex gap-4">
+          <button type="submit"
+            class="bg-cyan-custom text-dark-bg px-6 py-3 rounded-lg font-bold hover:bg-orange-custom transition-colors">
+            Save Changes
+          </button>
+          <button type="button" id="cancelEdit"
+            class="bg-item-bg text-white px-6 py-3 rounded-lg font-bold hover:bg-red-custom transition-colors">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Content Edit Modal -->
+  <div id="contentEditModal" class="edit-form">
+    <div class="form-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 id="contentModalTitle" class="text-2xl text-orange-custom">Edit Content</h2>
+        <button id="closeContentModal" class="text-white hover:text-red-custom text-xl">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <form id="contentEditForm">
+        <input type="hidden" id="contentType">
+        <input type="hidden" id="contentId">
+
+        <div class="mb-4">
+          <label class="block text-white mb-2">Title/Name:</label>
+          <input type="text" id="contentTitle"
+            class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom" required>
+        </div>
+
+        <div id="contentDescriptionDiv" class="mb-4" style="display: none;">
+          <label class="block text-white mb-2">Description:</label>
+          <textarea id="contentDescription"
+            class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom" rows="3"></textarea>
+        </div>
+
+        <div id="contentIconDiv" class="mb-4">
+          <label class="block text-white mb-2">Icon (Font Awesome class):</label>
+          <input type="text" id="contentIcon"
+            class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom"
+            placeholder="e.g., fa-solid fa-paintbrush">
+        </div>
+
+        <div id="contentColorDiv" class="mb-4" style="display: none;">
+          <label class="block text-white mb-2">Color:</label>
+          <select id="contentColor" class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom">
+            <option value="red-custom">Red</option>
+            <option value="purple-custom">Purple</option>
+            <option value="cyan-custom">Cyan</option>
+            <option value="yellow-custom">Yellow</option>
+            <option value="orange-custom">Orange</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-white mb-2">File (Image/Video/APK/Document):</label>
+          <input type="file" id="contentFile" accept="image/*,video/*,.apk,.txt,.pdf,.doc,.docx"
+            class="custom-upload w-full">
+          <div id="contentFilePreview" class="mt-2"></div>
+        </div>
+
+        <div class="flex gap-4">
+          <button type="submit"
+            class="bg-cyan-custom text-dark-bg px-6 py-3 rounded-lg font-bold hover:bg-orange-custom transition-colors">
+            Save Changes
+          </button>
+          <button type="button" id="cancelContentEdit"
+            class="bg-item-bg text-white px-6 py-3 rounded-lg font-bold hover:bg-red-custom transition-colors">
+            Cancel
+          </button>
+          <button type="button" id="deleteContent"
+            class="bg-red-custom text-white px-6 py-3 rounded-lg font-bold hover:bg-red-600 transition-colors">
+            Delete
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Upload Memory Modal -->
+  <!-- <div id="uploadMemoryModal" class="edit-form">
+    <div class="form-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl text-orange-custom">Upload Memory</h2>
+        <button id="closeMemoryModal" class="text-white hover:text-red-custom text-xl">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <form id="uploadMemoryForm">
+        <div class="mb-4">
+          <label class="block text-white mb-2">Select Photos/Videos:</label>
+          <div id="memoryUploadArea" class="upload-area">
+            <i class="fa-solid fa-cloud-upload-alt text-4xl text-cyan-custom mb-3"></i>
+            <p class="text-white mb-2">Drag & drop files here or click to browse</p>
+            <p class="text-sm text-gray-400">Supports: JPG, PNG, GIF, MP4, MOV, AVI</p>
+            <input type="file" id="memoryFileInput" multiple accept="image/*,video/*" class="hidden">
+          </div>
+          <div id="memoryUploadPreview" class="memory-upload-preview"></div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-white mb-2">Caption (Optional):</label>
+          <textarea id="memoryCaption" class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom"
+            rows="2" placeholder="Add a caption to your memories..."></textarea>
+        </div>
+
+        <div class="flex gap-4">
+          <button type="submit"
+            class="bg-cyan-custom text-dark-bg px-6 py-3 rounded-lg font-bold hover:bg-orange-custom transition-colors">
+            <i class="fa-solid fa-upload"></i> Upload Memories
+          </button>
+          <button type="button" id="cancelMemoryUpload"
+            class="bg-item-bg text-white px-6 py-3 rounded-lg font-bold hover:bg-red-custom transition-colors">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div> -->
+
+  <!-- Add Section Modal -->
+  <div id="addSectionModal" class="edit-form">
+    <div class="form-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl text-orange-custom">Add New Section</h2>
+        <button id="closeAddSectionModal" class="text-white hover:text-red-custom text-xl">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <form id="addSectionForm">
+        <div class="mb-4">
+          <label class="block text-white mb-2">Section Name:</label>
+          <input type="text" id="sectionName" class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom" required>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-white mb-2">Icon (FontAwesome class):</label>
+          <div class="relative">
+            <input type="text" id="sectionIcon" class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom pr-10" 
+                   placeholder="e.g., fa-solid fa-graduation-cap" readonly>
+            <button type="button" id="sectionIconPicker" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-cyan-custom hover:text-orange-custom">
+              <i class="fa-solid fa-icons text-xl"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <button type="submit"
+            class="bg-cyan-custom text-dark-bg px-6 py-3 rounded-lg font-bold hover:bg-orange-custom transition-colors">
+            Add Section
+          </button>
+          <button type="button" id="cancelAddSection"
+            class="bg-item-bg text-white px-6 py-3 rounded-lg font-bold hover:bg-red-custom transition-colors">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Section View Modal -->
+  <div id="sectionModal" class="edit-form">
+    <div class="form-content" style="max-width: 800px; width: 95%;">
+      <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center gap-4">
+          <h2 id="sectionModalTitle" class="text-2xl text-orange-custom">Section Items</h2>
+          <div class="flex gap-2">
+            <button id="editSectionInModalBtn" class="add-btn bg-yellow-custom" title="Edit Section">
+              <i class="fa-solid fa-edit"></i>
+            </button>
+            <button id="deleteSectionInModalBtn" class="add-btn bg-red-custom" title="Delete Section">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        <button id="closeSectionModal" class="text-white hover:text-red-custom text-xl">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <div id="sectionItemsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
+        <!-- Items will be loaded here -->
+      </div>
+
+      <div class="flex justify-center mt-6">
+        <button id="addItemToSectionBtn" class="bg-cyan-custom text-dark-bg px-6 py-3 rounded-lg font-bold hover:bg-orange-custom transition-colors">
+          <i class="fa-solid fa-plus"></i> Add New 
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item Gallery Modal -->
+  <div id="itemGalleryModal" class="edit-form">
+    <div class="form-content" style="max-width: 900px; width: 95%;">
+      <div class="flex justify-between items-center mb-6">
+        <h2 id="itemGalleryTitle" class="text-2xl text-orange-custom">My Gallery</h2>
+        <button id="closeItemGalleryModal" class="text-white hover:text-red-custom text-xl">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-4 mb-4">
+        <button id="galleryLeftArrow" onclick="changeGalleryPage(-1)" class="bg-cyan-custom text-dark-bg px-4 py-2 rounded-lg font-bold hover:bg-orange-custom transition-colors">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div id="galleryImageContainer" class="flex-1 text-center">
+          <!-- Current image will be displayed here -->
+        </div>
+        <button id="galleryRightArrow" onclick="changeGalleryPage(1)" class="bg-cyan-custom text-dark-bg px-4 py-2 rounded-lg font-bold hover:bg-orange-custom transition-colors">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <div class="flex justify-center gap-4 mt-6">
+        <button id="editItemBtn" class="bg-yellow-custom text-dark-bg px-4 py-2 rounded-lg font-bold hover:bg-orange-custom transition-colors">
+          <i class="fa-solid fa-edit"></i> Edit
+        </button>
+        <button id="deleteItemBtn" class="bg-red-custom text-white px-4 py-2 rounded-lg font-bold hover:bg-red-600 transition-colors">
+          <i class="fa-solid fa-trash"></i> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Section Modal -->
+  <div id="editSectionModal" class="edit-form">
+    <div class="form-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl text-orange-custom">Edit Section</h2>
+        <button id="closeEditSectionModal" class="text-white hover:text-red-custom text-xl">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <form id="editSectionForm">
+        <input type="hidden" id="editSectionId">
+        
+        <div class="mb-4">
+          <label class="block text-white mb-2">Section Name:</label>
+          <input type="text" id="editSectionName" class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom" required>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-white mb-2">Icon (FontAwesome class):</label>
+          <div class="relative">
+            <input type="text" id="editSectionIcon" class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom pr-10" 
+                   placeholder="e.g., fa-solid fa-graduation-cap" readonly>
+            <button type="button" id="editSectionIconPicker" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-cyan-custom hover:text-orange-custom">
+              <i class="fa-solid fa-icons text-xl"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <button type="submit"
+            class="bg-cyan-custom text-dark-bg px-6 py-3 rounded-lg font-bold hover:bg-orange-custom transition-colors">
+            Update Section
+          </button>
+          <button type="button" id="cancelEditSection"
+            class="bg-item-bg text-white px-6 py-3 rounded-lg font-bold hover:bg-red-custom transition-colors">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Section Item Modal -->
+  <div id="addSectionItemModal" class="edit-form">
+    <div class="form-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 id="addSectionItemTitle" class="text-2xl text-orange-custom">Add</h2>
+        <button id="closeAddSectionItemModal" class="text-white hover:text-red-custom text-xl">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <form id="addSectionItemForm">
+        <input type="hidden" id="addSectionItemSectionId">
+        
+        <div class="mb-4">
+          <label class="block text-white mb-2">Title:</label>
+          <input type="text" id="itemTitle" class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom" required>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-white mb-2">Icon (FontAwesome class):</label>
+          <div class="relative">
+            <input type="text" id="itemIcon" class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom pr-10" 
+                   placeholder="e.g., fa-solid fa-star" readonly>
+            <button type="button" id="itemIconPicker" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-cyan-custom hover:text-orange-custom">
+              <i class="fa-solid fa-icons text-xl"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-white mb-2">Description (Optional):</label>
+          <textarea id="itemDescription" class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom" 
+                    rows="3" placeholder="Add a description..."></textarea>
+        </div>
+
+        <div id="itemColorDiv" class="mb-4" style="display: none;">
+          <label class="block text-white mb-2">Color (for skills):</label>
+          <select id="itemColor" class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom">
+            <option value="cyan-custom">Cyan</option>
+            <option value="orange-custom">Orange</option>
+            <option value="red-custom">Red</option>
+            <option value="purple-custom">Purple</option>
+            <option value="yellow-custom">Yellow</option>
+          </select>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-white mb-3 font-semibold">
+            <i class="fa-solid fa-paperclip text-orange-custom mr-2"></i>
+            Attach File (Optional)
+          </label>
+          
+          <!-- Stylish File Upload Container -->
+          <div class="file-upload-container relative">
+            <div class="file-upload-area bg-gradient-to-r from-cyan-custom/10 to-orange-custom/10 border-2 border-dashed border-cyan-custom/50 rounded-xl p-6 text-center transition-all duration-300 hover:border-orange-custom/70 hover:from-cyan-custom/20 hover:to-orange-custom/20">
+              
+              <!-- Upload Icon -->
+              <div class="upload-icon mb-4">
+                <i class="fa-solid fa-cloud-upload-alt text-4xl text-cyan-custom animate-pulse"></i>
+              </div>
+              
+              <!-- Upload Text -->
+              <div class="upload-text mb-4">
+                <h3 class="text-lg font-semibold text-white mb-2">Choose files to upload</h3>
+                <p class="text-gray-400 text-sm">Images, videos, PDFs, or documents (up to 10 files)</p>
+              </div>
+              
+              <!-- File Input (Hidden) -->
+              <input 
+                type="file" 
+                id="itemFile" 
+                accept="image/*,video/*,.pdf,.doc,.docx,.txt" 
+                class="hidden"
+                multiple
+              >
+              
+              <!-- Custom Upload Button -->
+              <button 
+                type="button" 
+                onclick="document.getElementById('itemFile').click()"
+                class="upload-btn bg-gradient-to-r from-cyan-custom to-orange-custom text-white px-6 py-3 rounded-lg font-bold hover:from-orange-custom hover:to-cyan-custom transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+              >
+                <i class="fa-solid fa-folder-open mr-2"></i>
+                Browse Files
+              </button>
+              
+              <!-- Selected Files Display -->
+              <div id="selectedFilesContainer" class="mt-4 space-y-2"></div>
+            </div>
+          </div>
+          
+          <!-- File Preview -->
+          <div id="itemFilePreview" class="mt-4"></div>
+        </div>
+
+        <div class="flex gap-4">
+          <button type="submit" id="addSectionItemSubmitBtn"
+            class="bg-cyan-custom text-dark-bg px-6 py-3 rounded-lg font-bold hover:bg-orange-custom transition-colors">
+            Add
+          </button>
+          <button type="button" id="cancelAddSectionItem"
+            class="bg-item-bg text-white px-6 py-3 rounded-lg font-bold hover:bg-red-custom transition-colors">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Media Viewer Modal -->
+  <div id="mediaViewer" class="media-viewer">
+    <div class="media-content">
+      <button id="closeMediaViewer" class="close-viewer">
+        <i class="fa-solid fa-times"></i>
+      </button>
+      <div id="mediaContainer">
+        <!-- Media content will be inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Icon Picker Modal -->
+  <div id="iconPickerModal" class="edit-form">
+    <div class="form-content" style="max-width: 700px; width: 95%;">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl text-orange-custom">Choose an Icon</h2>
+        <button id="closeIconPickerModal" class="text-white hover:text-red-custom text-xl">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <div class="mb-4">
+        <input type="text" id="iconSearchInput" class="w-full p-3 rounded-lg bg-item-bg text-white border border-cyan-custom" 
+               placeholder="Search icons...">
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[60vh] overflow-y-auto">
+        
+        <!-- Cooking Group -->
+        <div class="icon-group">
+          <h3 class="text-lg font-semibold text-cyan-custom mb-3 flex items-center">
+            <i class="fa-solid fa-utensils mr-2"></i>
+            Cooking & Food
+          </h3>
+          <div class="grid grid-cols-4 gap-3">
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-utensils">
+              <i class="fa-solid fa-utensils text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-pizza-slice">
+              <i class="fa-solid fa-pizza-slice text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-hamburger">
+              <i class="fa-solid fa-hamburger text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-coffee">
+              <i class="fa-solid fa-coffee text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-birthday-cake">
+              <i class="fa-solid fa-birthday-cake text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-ice-cream">
+              <i class="fa-solid fa-ice-cream text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-wine-glass">
+              <i class="fa-solid fa-wine-glass text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-cookie-bite">
+              <i class="fa-solid fa-cookie-bite text-2xl text-orange-custom"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sports Group -->
+        <div class="icon-group">
+          <h3 class="text-lg font-semibold text-cyan-custom mb-3 flex items-center">
+            <i class="fa-solid fa-futbol mr-2"></i>
+            Sports & Fitness
+          </h3>
+          <div class="grid grid-cols-4 gap-3">
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-futbol">
+              <i class="fa-solid fa-futbol text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-basketball-ball">
+              <i class="fa-solid fa-basketball-ball text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-dumbbell">
+              <i class="fa-solid fa-dumbbell text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-running">
+              <i class="fa-solid fa-running text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-swimming-pool">
+              <i class="fa-solid fa-swimming-pool text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-bicycle">
+              <i class="fa-solid fa-bicycle text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-volleyball-ball">
+              <i class="fa-solid fa-volleyball-ball text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-table-tennis">
+              <i class="fa-solid fa-table-tennis text-2xl text-orange-custom"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Education Group -->
+        <div class="icon-group">
+          <h3 class="text-lg font-semibold text-cyan-custom mb-3 flex items-center">
+            <i class="fa-solid fa-graduation-cap mr-2"></i>
+            Education & Learning
+          </h3>
+          <div class="grid grid-cols-4 gap-3">
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-graduation-cap">
+              <i class="fa-solid fa-graduation-cap text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-book">
+              <i class="fa-solid fa-book text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-laptop-code">
+              <i class="fa-solid fa-laptop-code text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-microscope">
+              <i class="fa-solid fa-microscope text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-palette">
+              <i class="fa-solid fa-palette text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-music">
+              <i class="fa-solid fa-music text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-language">
+              <i class="fa-solid fa-language text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-calculator">
+              <i class="fa-solid fa-calculator text-2xl text-orange-custom"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Adventure Group -->
+        <div class="icon-group">
+          <h3 class="text-lg font-semibold text-cyan-custom mb-3 flex items-center">
+            <i class="fa-solid fa-mountain mr-2"></i>
+            Adventure & Travel
+          </h3>
+          <div class="grid grid-cols-4 gap-3">
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-mountain">
+              <i class="fa-solid fa-mountain text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-plane">
+              <i class="fa-solid fa-plane text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-car">
+              <i class="fa-solid fa-car text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-ship">
+              <i class="fa-solid fa-ship text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-campground">
+              <i class="fa-solid fa-campground text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-compass">
+              <i class="fa-solid fa-compass text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-map-marked-alt">
+              <i class="fa-solid fa-map-marked-alt text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-camera">
+              <i class="fa-solid fa-camera text-2xl text-orange-custom"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Achievement Group -->
+        <div class="icon-group">
+          <h3 class="text-lg font-semibold text-cyan-custom mb-3 flex items-center">
+            <i class="fa-solid fa-trophy mr-2"></i>
+            Achievement & Awards
+          </h3>
+          <div class="grid grid-cols-4 gap-3">
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-trophy">
+              <i class="fa-solid fa-trophy text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-medal">
+              <i class="fa-solid fa-medal text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-star">
+              <i class="fa-solid fa-star text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-crown">
+              <i class="fa-solid fa-crown text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-certificate">
+              <i class="fa-solid fa-certificate text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-award">
+              <i class="fa-solid fa-award text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-gem">
+              <i class="fa-solid fa-gem text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-fire">
+              <i class="fa-solid fa-fire text-2xl text-orange-custom"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- General Group -->
+        <div class="icon-group">
+          <h3 class="text-lg font-semibold text-cyan-custom mb-3 flex items-center">
+            <i class="fa-solid fa-th mr-2"></i>
+            General & Others
+          </h3>
+          <div class="grid grid-cols-4 gap-3">
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-heart">
+              <i class="fa-solid fa-heart text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-gamepad">
+              <i class="fa-solid fa-gamepad text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-paintbrush">
+              <i class="fa-solid fa-paintbrush text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-code">
+              <i class="fa-solid fa-code text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-lightbulb">
+              <i class="fa-solid fa-lightbulb text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-rocket">
+              <i class="fa-solid fa-rocket text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-magic">
+              <i class="fa-solid fa-magic text-2xl text-orange-custom"></i>
+            </button>
+            <button class="icon-option p-3 rounded-lg bg-item-bg hover:bg-cyan-custom/20 border border-cyan-custom/30 hover:border-cyan-custom transition-all duration-200" data-icon="fa-solid fa-smile">
+              <i class="fa-solid fa-smile text-2xl text-orange-custom"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Stars animation
+    const stars = document.querySelector(".stars");
+    for (let i = 0; i < 30; i++) {
+      let star = document.createElement("div");
+      star.className = "star absolute w-[6px] h-[6px] bg-white rounded-full opacity-70";
+      star.style.left = Math.random() * 100 + "vw";
+      star.style.top = Math.random() * 100 + "vh";
+      star.style.animationDuration = 2 + Math.random() * 3 + "s";
+      stars.appendChild(star);
+    }
+  </script>
+
+  <script>
+    // Global variables
+    let profileData = {};
+    let currentEditType = '';
+    let currentEditId = '';
+    let isEditMode = false;
+    let selectedMemoryFiles = [];
+    let currentProfileId = null;
+    let slideshowImages = [];
+    let currentSlideIndex = 0;
+    let slideshowInterval = null;
+    const AUTH_TOKEN = 'Bearer your-token-here'; // Replace with actual token
+
+    // Toast Notification System
+    const toast = {
+      show(message, type = 'info', duration = 5000) {
+        const container = document.getElementById('toastContainer');
+        const toastElement = document.createElement('div');
+        const toastId = 'toast-' + Date.now();
+        
+        const icons = {
+          success: 'fa-solid fa-check-circle',
+          error: 'fa-solid fa-exclamation-circle',
+          warning: 'fa-solid fa-exclamation-triangle',
+          info: 'fa-solid fa-info-circle'
+        };
+        
+        const titles = {
+          success: 'Success',
+          error: 'Error',
+          warning: 'Warning',
+          info: 'Info'
+        };
+        
+        toastElement.className = `toast ${type}`;
+        toastElement.id = toastId;
+        toastElement.innerHTML = `
+          <div class="toast-header">
+            <div class="toast-title">
+              <i class="toast-icon ${icons[type]}"></i>
+              ${titles[type]}
+            </div>
+            <button class="toast-close" onclick="toast.hide('${toastId}')">
+              <i class="fa-solid fa-times"></i>
+            </button>
+          </div>
+          <div class="toast-message">${message}</div>
+        `;
+        
+        container.appendChild(toastElement);
+        
+        // Show animation
+        setTimeout(() => {
+          toastElement.classList.add('show');
+        }, 100);
+        
+        // Auto hide
+        if (duration > 0) {
+          setTimeout(() => {
+            this.hide(toastId);
+          }, duration);
+        }
+        
+        return toastId;
+      },
+      
+      hide(toastId) {
+        const toastElement = document.getElementById(toastId);
+        if (toastElement) {
+          toastElement.classList.remove('show');
+          setTimeout(() => {
+            if (toastElement.parentNode) {
+              toastElement.parentNode.removeChild(toastElement);
+            }
+          }, 300);
+        }
+      },
+      
+      success(message, duration = 5000) {
+        return this.show(message, 'success', duration);
+      },
+      
+      error(message, duration = 7000) {
+        return this.show(message, 'error', duration);
+      },
+      
+      warning(message, duration = 6000) {
+        return this.show(message, 'warning', duration);
+      },
+      
+      info(message, duration = 5000) {
+        return this.show(message, 'info', duration);
+      }
+    };
+
+    // API functions
+    const api = {
+      async getProfile() {
+        const response = await fetch('/api/profile', {
+          headers: { 'Authorization': AUTH_TOKEN }
+        });
+        if (!response.ok) throw new Error('Failed to fetch profile');
+        return await response.json();
+      },
+
+      async getProfileById(profileId) {
+        console.log('Fetching profile by ID:', profileId); // Debug log
+        const response = await fetch(`/api/profile/${profileId}`);
+        console.log('Response status:', response.status); // Debug log
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || 'Failed to fetch profile');
+        }
+        return await response.json();
+      },
+
+      async getProfileByUsername(username) {
+        console.log('Fetching profile by username:', username); // Debug log
+        const response = await fetch(`/api/profile/username/${username}`);
+        console.log('Response status:', response.status); // Debug log
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || 'Failed to fetch profile');
+        }
+        const profileData = await response.json();
+        // Get the full profile data using the profile ID
+        return await this.getProfileById(profileData.profileId);
+      },
+
+      async updateProfile(data) {
+        if (currentProfileId && currentProfileId !== 'index.html') {
+          data.profileId = currentProfileId;
+        }
+        const response = await fetch('/api/profile', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        if (!response.ok) throw new Error('Failed to update profile');
+        return await response.json();
+      },
+
+      async updateProfilePicture(file) {
+        const formData = new FormData();
+        formData.append('profilePicture', file);
+        if (currentProfileId && currentProfileId !== 'index.html') {
+          formData.append('profileId', currentProfileId);
+        }
+        const response = await fetch('/api/profile/picture', {
+          method: 'POST',
+          body: formData
+        });
+        if (!response.ok) throw new Error('Failed to update profile picture');
+        return await response.json();
+      },
+
+      async updateCoverImage(file) {
+        const formData = new FormData();
+        formData.append('coverImage', file);
+        if (currentProfileId && currentProfileId !== 'index.html') {
+          formData.append('profileId', currentProfileId);
+        }
+        const response = await fetch('/api/profile/cover', {
+          method: 'POST',
+          body: formData
+        });
+        if (!response.ok) throw new Error('Failed to update cover image');
+        return await response.json();
+      },
+
+      async addContent(type, data, file) {
+        const formData = new FormData();
+        Object.keys(data).forEach(key => {
+          formData.append(key, data[key]);
+        });
+        if (currentProfileId && currentProfileId !== 'index.html') {
+          formData.append('profileId', currentProfileId);
+        }
+        if (file) {
+          formData.append('file', file);
+        }
+
+        const response = await fetch(`/api/content/${type}`, {
+          method: 'POST',
+          body: formData
+        });
+        if (!response.ok) throw new Error(`Failed to add ${type}`);
+        return await response.json();
+      },
+
+      async updateContent(type, id, data, file) {
+        const formData = new FormData();
+        Object.keys(data).forEach(key => {
+          formData.append(key, data[key]);
+        });
+        if (currentProfileId && currentProfileId !== 'index.html') {
+          formData.append('profileId', currentProfileId);
+        }
+        if (file) {
+          formData.append('file', file);
+        }
+
+        const response = await fetch(`/api/content/${type}/${id}`, {
+          method: 'PUT',
+          body: formData
+        });
+        if (!response.ok) throw new Error(`Failed to update ${type}`);
+        return await response.json();
+      },
+
+      async deleteContent(type, id) {
+        const url = currentProfileId && currentProfileId !== 'index.html' 
+          ? `/api/content/${type}/${id}?profileId=${currentProfileId}`
+          : `/api/content/${type}/${id}`;
+        const response = await fetch(url, {
+          method: 'DELETE'
+        });
+        if (!response.ok) throw new Error(`Failed to delete ${type}`);
+        return await response.json();
+      },
+
+      // async getMemories() {
+      //   const url = currentProfileId && currentProfileId !== 'index.html' 
+      //     ? `/api/memories?profileId=${currentProfileId}`
+      //     : '/api/memories';
+      //   const response = await fetch(url);
+      //   if (!response.ok) throw new Error('Failed to fetch memories');
+      //   return await response.json();
+      // },
+
+      // async uploadMemory(file, caption) {
+      //   const formData = new FormData();
+      //   formData.append('memory', file);
+      //   if (caption) {
+      //     formData.append('caption', caption);
+      //   }
+      //   if (currentProfileId && currentProfileId !== 'index.html') {
+      //     formData.append('profileId', currentProfileId);
+      //   }
+
+      //   const response = await fetch('/api/memories', {
+      //     method: 'POST',
+      //     body: formData
+      //   });
+      //   if (!response.ok) throw new Error('Failed to upload memory');
+      //   return await response.json();
+      // },
+
+      // async deleteMemory(id) {
+      //   const url = currentProfileId && currentProfileId !== 'index.html' 
+      //     ? `/api/memories/${id}?profileId=${currentProfileId}`
+      //     : `/api/memories/${id}`;
+      //   const response = await fetch(url, {
+      //     method: 'DELETE'
+      //   });
+      //   if (!response.ok) throw new Error('Failed to delete memory');
+      //   return await response.json();
+      // },
+
+      // Dynamic Sections API
+      async createSection(data) {
+        if (currentProfileId && currentProfileId !== 'index.html') {
+          data.profileId = currentProfileId;
+        }
+        const response = await fetch('/api/sections/section', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        if (!response.ok) throw new Error('Failed to create section');
+        return await response.json();
+      },
+
+      async getSections(userId) {
+        const url = currentProfileId && currentProfileId !== 'index.html' 
+          ? `/api/sections/sections?profileId=${currentProfileId}`
+          : `/api/sections/sections?userId=${userId}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch sections');
+        return await response.json();
+      },
+
+      async addSectionItem(data, files) {
+        const formData = new FormData();
+        Object.keys(data).forEach(key => {
+          formData.append(key, data[key]);
+        });
+        if (files && files.length > 0) {
+          files.forEach(file => {
+            formData.append('files', file);
+          });
+        }
+
+        const response = await fetch('/api/sections/section/item', {
+          method: 'POST',
+          body: formData
+        });
+        if (!response.ok) throw new Error('Failed to add section item');
+        return await response.json();
+      },
+
+      async deleteSection(sectionId) {
+        const response = await fetch(`/api/sections/section/${sectionId}`, {
+          method: 'DELETE'
+        });
+        if (!response.ok) throw new Error('Failed to delete section');
+        return await response.json();
+      },
+
+      async deleteSectionItem(itemId) {
+        const response = await fetch(`/api/sections/section/item/${itemId}`, {
+          method: 'DELETE'
+        });
+        if (!response.ok) throw new Error('Failed to delete section item');
+        return await response.json();
+      },
+
+      async updateSection(data) {
+        if (currentProfileId && currentProfileId !== 'index.html') {
+          data.profileId = currentProfileId;
+        }
+        const response = await fetch(`/api/sections/section/${data.sectionId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        if (!response.ok) throw new Error('Failed to update section');
+        return await response.json();
+      },
+
+      async updateSectionItem(data, files) {
+        const formData = new FormData();
+        Object.keys(data).forEach(key => {
+          formData.append(key, data[key]);
+        });
+        if (currentProfileId && currentProfileId !== 'index.html') {
+          formData.append('profileId', currentProfileId);
+        }
+        if (files && files.length > 0) {
+          files.forEach(file => {
+            formData.append('files', file);
+          });
+        }
+
+        const response = await fetch(`/api/sections/section/item/${data.itemId}`, {
+          method: 'PUT',
+          body: formData
+        });
+        if (!response.ok) throw new Error('Failed to update section item');
+        return await response.json();
+      }
+    };
+
+    // Get profile ID or username from URL
+    function getProfileIdFromUrl() {
+      const pathSegments = window.location.pathname.split('/');
+      const lastSegment = pathSegments[pathSegments.length - 1];
+      
+      // Check if it's a username (starts with @)
+      if (lastSegment.startsWith('@')) {
+        return { type: 'username', value: lastSegment.substring(1) };
+      }
+      
+      // Check if it's a profile ID (alphanumeric, 12 characters)
+      if (lastSegment && lastSegment.length === 12 && /^[a-zA-Z0-9]+$/.test(lastSegment)) {
+        return { type: 'profileId', value: lastSegment };
+      }
+      
+      // Default case
+      return { type: 'default', value: lastSegment };
+    }
+
+    // Load and display profile data
+    async function loadProfile() {
+      try {
+        // Get profile ID or username from URL
+        const urlData = getProfileIdFromUrl();
+        console.log('URL Data:', urlData); // Debug log
+        
+        if (urlData.type === 'username') {
+          // Load profile by username
+          console.log('Loading profile by username:', urlData.value); // Debug log
+          profileData = await api.getProfileByUsername(urlData.value);
+          currentProfileId = profileData.user.profile_id; // Set the profile ID for future use
+        } else if (urlData.type === 'profileId') {
+          // Load profile by ID
+          console.log('Loading profile by ID:', urlData.value); // Debug log
+          profileData = await api.getProfileById(urlData.value);
+          currentProfileId = urlData.value;
+        } else {
+          // Load default profile (for backward compatibility)
+          console.log('Loading default profile'); // Debug log
+          profileData = await api.getProfile();
+          currentProfileId = null;
+        }
+        
+        console.log('Profile data loaded:', profileData); // Debug log
+        displayProfile();
+        // await loadMemories();
+        // updateMemoriesSection();
+        // Refresh slideshow with new data
+        initializeSlideshow();
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        toast.error('Failed to load profile: ' + error.message);
+        showFallbackData();
+      }
+    }
+
+    // Load memories
+    // async function loadMemories() {
+    //   try {
+    //     // Only load memories if we have a profile ID
+    //     if (currentProfileId && currentProfileId !== 'index.html') {
+    //       const memoriesData = await api.getMemories();
+    //       displayMemories(memoriesData.memories);
+    //     } else {
+    //       // For default profile, show empty memories
+    //       displayMemories([]);
+    //     }
+    //   } catch (error) {
+    //     console.error('Error loading memories:', error);
+    //     displayMemories([]);
+    //   }
+    // }
+
+    // --- SLIDER LOGIC FOR MEMORIES SECTION ---
+    // const memoriesTypes = [
+    //   {
+    //     key: 'memories',
+    //     title: 'My Memories',
+    //     icon: 'fa-images',
+    //     getItems: () => allMemories,
+    //     getFile: m => m.file_path,
+    //     getType: m => m.file_type,
+    //     getId: m => m.id,
+    //     getCaption: m => m.caption || '',
+    //   },
+    //   // Dynamic sections with files will be added here
+    // ];
+    // let currentMemoriesTypeIndex = 0;
+    // let allMemories = [];
+    // let visibleCount = 8;
+
+    // function updateMemoriesSection() {
+    //   // Build dynamic memories types including dynamic sections
+    //   const dynamicMemoriesTypes = [
+    //     {
+    //       key: 'memories',
+    //       title: 'My Memories',
+    //       icon: 'fa-images',
+    //       getItems: () => allMemories,
+    //       getFile: m => m.file_path,
+    //       getType: m => m.file_type,
+    //       getId: m => m.id,
+    //       getCaption: m => m.caption || '',
+    //     }
+    //   ];
+
+    //   // Add dynamic sections that have items with files
+    //   if (profileData.sections) {
+    //     profileData.sections.forEach(section => {
+    //       const itemsWithFiles = section.items.filter(item => item.file_path);
+    //       if (itemsWithFiles.length > 0) {
+    //         dynamicMemoriesTypes.push({
+    //           key: `section-${section.id}`,
+    //           title: section.name,
+    //           icon: section.icon || 'fa-folder',
+    //           getItems: () => itemsWithFiles,
+    //           getFile: item => item.file_path,
+    //           getType: item => item.file_type || (item.file_path ? (item.file_path.match(/\.(mp4|mov|avi)$/i) ? 'video' : 'image') : ''),
+    //           getId: item => item.id,
+    //           getCaption: item => item.title || '',
+    //         });
+    //       }
+    //     });
+    //   }
+
+    //   const typeObj = dynamicMemoriesTypes[currentMemoriesTypeIndex % dynamicMemoriesTypes.length];
+    //   document.getElementById('memoriesSectionTitleText').textContent = typeObj.title;
+    //   const iconElem = document.querySelector('#memoriesSectionTitle i');
+    //   iconElem.className = `fa-solid ${typeObj.icon}`;
+    //   // Get items
+    //   const items = typeObj.getItems();
+    //   renderVisibleMemoriesCustom(items, typeObj);
+    // }
+
+    // function renderVisibleMemoriesCustom(items, typeObj) {
+    //   const grid = document.getElementById('memoriesGrid');
+    //   grid.innerHTML = '';
+    //   const toShow = items.slice(0, visibleCount);
+    //   toShow.forEach(item => {
+    //     const isImage = typeObj.getType(item) === 'image';
+    //     const filePath = typeObj.getFile(item);
+    //     if (!filePath) return;
+    //     const gridItem = document.createElement('div');
+    //     gridItem.className = 'memory-item';
+    //     gridItem.dataset.id = typeObj.getId(item);
+    //     gridItem.dataset.type = typeObj.getType(item);
+    //     gridItem.dataset.path = filePath;
+    //     gridItem.innerHTML = isImage
+    //       ? `<img src="/uploads/${filePath}" alt="Memory" loading="lazy">`
+    //       : `<video src="/uploads/${filePath}" muted>
+    //            <source src="/uploads/${filePath}" type="video/mp4">
+    //          </video>
+    //          <div class="play-icon"><i class="fa-solid fa-play"></i></div>`;
+    //     // Caption/label
+    //     if (typeObj.getCaption(item)) {
+    //       gridItem.innerHTML += `<div class="memory-label">${typeObj.getCaption(item)}</div>`;
+    //     }
+    //     // Delete button only for memories
+    //     if (typeObj.key === 'memories') {
+    //       const deleteBtn = document.createElement('button');
+    //       deleteBtn.className = 'delete-btn';
+    //       deleteBtn.innerHTML = `<i class="fa-solid fa-trash"></i>`;
+    //       deleteBtn.onclick = (e) => {
+    //         e.stopPropagation();
+    //         deleteMemory(typeObj.getId(item));
+    //       };
+    //       gridItem.appendChild(deleteBtn);
+    //     }
+    //     gridItem.addEventListener('click', (e) => {
+    //       if (!e.target.closest('.delete-btn')) {
+    //         openMediaViewer(typeObj.getType(item), `uploads/${filePath}`);
+    //       }
+    //     });
+    //     grid.appendChild(gridItem);
+    //   });
+    //   // Load More button
+    //   const loadMoreBtn = document.getElementById('loadMoreMemoriesBtn');
+    //   if (items.length > visibleCount) {
+    //     loadMoreBtn.style.display = 'inline-block';
+    //   } else {
+    //     loadMoreBtn.style.display = 'none';
+    //   }
+    // }
+
+    // document.getElementById('memoriesLeftArrow').addEventListener('click', () => {
+    //   currentMemoriesTypeIndex = (currentMemoriesTypeIndex - 1);
+    //   if (currentMemoriesTypeIndex < 0) {
+    //     // Calculate total length dynamically
+    //     const dynamicMemoriesTypes = [
+    //       { key: 'memories', title: 'My Memories', icon: 'fa-images' }
+    //     ];
+    //     if (profileData.sections) {
+    //       profileData.sections.forEach(section => {
+    //       const itemsWithFiles = section.items.filter(item => item.file_path);
+    //       if (itemsWithFiles.length > 0) {
+    //         dynamicMemoriesTypes.push({ key: `section-${section.id}`, title: section.name, icon: section.icon || 'fa-folder' });
+    //       }
+    //     });
+    //   }
+    //   currentMemoriesTypeIndex = dynamicMemoriesTypes.length - 1;
+    // }
+    // visibleCount = 8;
+    // animateArrow('memoriesLeftArrow');
+    // updateMemoriesSection();
+    // });
+    // document.getElementById('memoriesRightArrow').addEventListener('click', () => {
+    //   currentMemoriesTypeIndex = (currentMemoriesTypeIndex + 1);
+    //   // Calculate total length dynamically
+    //   const dynamicMemoriesTypes = [
+    //     { key: 'memories', title: 'My Memories', icon: 'fa-images' }
+    //   ];
+    //   if (profileData.sections) {
+    //     profileData.sections.forEach(section => {
+    //       const itemsWithFiles = section.items.filter(item => item.file_path);
+    //       if (itemsWithFiles.length > 0) {
+    //         dynamicMemoriesTypes.push({ key: `section-${section.id}`, title: section.name, icon: section.icon || 'fa-folder' });
+    //       }
+    //     });
+    //   }
+    //   if (currentMemoriesTypeIndex >= dynamicMemoriesTypes.length) {
+    //     currentMemoriesTypeIndex = 0;
+    //   }
+    //   visibleCount = 8;
+    //   animateArrow('memoriesRightArrow');
+    //   updateMemoriesSection();
+    // });
+    // document.getElementById('loadMoreMemoriesBtn').addEventListener('click', () => {
+    //   visibleCount += 8;
+    //   updateMemoriesSection();
+    // });
+    function animateArrow(id) {
+      const btn = document.getElementById(id);
+      btn.style.transform = 'scale(1.3) rotate(20deg)';
+      setTimeout(() => { btn.style.transform = ''; }, 250);
+    }
+    // --- END SLIDER LOGIC ---
+
+    // Display memories in grid
+    // function displayMemories(memories) {
+    //   allMemories = memories;
+    //   visibleCount = 8;
+    //   if (currentMemoriesTypeIndex === 0) {
+    //     updateMemoriesSection();
+    //   }
+    // }
+
+    // Open media viewer
+
+    // Delete memory
+    // async function deleteMemory(id) {
+    //   if (confirm('Are you sure you want to delete this memory?')) {
+    //     try {
+    //       await api.deleteMemory(id);
+    //       await loadMemories();
+    //       toast.success('Memory deleted successfully!');
+    //           } catch (error) {
+    //     console.error('Error deleting memory:', error);
+    //     toast.error('Error deleting memory. Please try again.');
+    //   }
+    //   }
+    // }
+
+    // Show fallback data if API fails
+    function showFallbackData() {
+      if (currentProfileId && currentProfileId !== 'index.html') {
+        // Show error for specific profile
+        document.getElementById('userName').textContent = 'Profile Not Found';
+        document.getElementById('introText').textContent = 'Sorry, this profile could not be loaded.';
+        document.getElementById('highlightsPrefix').style.display = 'none';
+        document.getElementById('highlightsContainer').innerHTML = '';
+      } else {
+        // Show default fallback data
+        document.getElementById('userName').textContent = 'Rastriya Computer Literacy Drive ';
+        document.getElementById('introText').textContent = 'Hi! I\'m RCLD I will help you to grow your career ';
+        document.getElementById('highlightsPrefix').style.display = 'inline';
+        document.getElementById('highlightsContainer').innerHTML =
+          '<span class="highlight text-orange-custom font-bold">Coding/Programming</span>, ' +
+          '<span class="highlight text-orange-custom font-bold">Office work</span>, and ' +
+          '<span class="highlight text-orange-custom font-bold">Robotics</span>';
+      }
+    }
+
+    // Display profile data
+    function displayProfile() {
+      const { user, highlights, sections } = profileData;
+
+      // Update profile section
+      document.getElementById('userName').textContent = user.name;
+      document.getElementById('introText').textContent = user.intro_text;
+
+      if (user.profile_picture) {
+        document.getElementById('profilePic').src = user.profile_picture.startsWith('user.')
+          ? user.profile_picture
+          : user.profile_picture;
+      }
+
+      if (user.cover_image) {
+        document.getElementById('coverImage').src = user.cover_image.startsWith('cover.')
+          ? user.cover_image
+          : user.cover_image;
+      }
+
+      // Update highlights
+      const highlightsContainer = document.getElementById('highlightsContainer');
+      const highlightsPrefix = document.getElementById('highlightsPrefix');
+      
+      if (highlights && highlights.length > 0) {
+        highlightsPrefix.style.display = 'inline';
+        highlightsContainer.innerHTML = highlights.map(h =>
+          `<span class="highlight text-orange-custom font-bold">${h.highlight_text}</span>`
+        ).join(', ');
+      } else {
+        highlightsPrefix.style.display = 'none';
+        highlightsContainer.innerHTML = '';
+      }
+
+      // Initialize slideshow
+      initializeSlideshow();
+
+      // Render all dynamic sections
+      renderDynamicSections(sections || []);
+
+      // Add event listeners
+      addEventListeners();
+    }
+
+    // Initialize slideshow with random images from each section
+    function initializeSlideshow() {
+      slideshowImages = [];
+      
+      // Collect all images from all sections
+      const sectionImages = {};
+      
+      if (profileData.sections) {
+        profileData.sections.forEach(section => {
+          const sectionImageFiles = [];
+          
+          section.items.forEach(item => {
+            if (item.file_path) {
+              try {
+                // Try to parse as JSON (multiple files)
+                const files = JSON.parse(item.file_path);
+                if (Array.isArray(files)) {
+                  // Multiple files
+                  files.forEach(file => {
+                    if (file.type === 'image') {
+                      sectionImageFiles.push({
+                        src: file.path,
+                        title: `${item.title} (${section.name})`,
+                        type: 'section',
+                        sectionName: section.name,
+                        itemTitle: item.title
+                      });
+                    }
+                  });
+                } else {
+                                  // Single file (backward compatibility)
+                if (item.file_type === 'image' || item.file_path.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                  sectionImageFiles.push({
+                    src: item.file_path,
+                    title: `${item.title} (${section.name})`,
+                    type: 'section',
+                    sectionName: section.name,
+                    itemTitle: item.title
+                  });
+                }
+                }
+              } catch (e) {
+                // Single file (backward compatibility)
+                if (item.file_type === 'image' || item.file_path.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                  sectionImageFiles.push({
+                    src: item.file_path,
+                    title: `${item.title} (${section.name})`,
+                    type: 'section',
+                    sectionName: section.name,
+                    itemTitle: item.title
+                  });
+                }
+              }
+            }
+          });
+          
+          if (sectionImageFiles.length > 0) {
+            sectionImages[section.name] = sectionImageFiles;
+          }
+        });
+      }
+      
+      // Select one random image from each section
+      const sectionNames = Object.keys(sectionImages);
+      sectionNames.forEach(sectionName => {
+        const images = sectionImages[sectionName];
+        if (images.length > 0) {
+          // Select a random image from this section
+          const randomImage = images[Math.floor(Math.random() * images.length)];
+          slideshowImages.push(randomImage);
+        }
+      });
+      
+      // If we have more than 5 sections, randomly select 5
+      if (slideshowImages.length > 5) {
+        slideshowImages = slideshowImages.sort(() => Math.random() - 0.5).slice(0, 5);
+      }
+      
+      // If no images, add a placeholder
+      if (slideshowImages.length === 0) {
+        slideshowImages.push({
+          src: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMjMyNjRhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIGltYWdlcyB5ZXQ8L3RleHQ+PC9zdmc+',
+          title: 'No images yet',
+          type: 'placeholder'
+        });
+      }
+      
+      renderSlideshow();
+      
+      // Ensure proper initialization
+      setTimeout(() => {
+        startSlideshow();
+      }, 200);
+    }
+
+
+
+    // Render slideshow
+    function renderSlideshow() {
+      const container = document.getElementById('slideshowImages');
+      const indicators = document.getElementById('slideshowIndicators');
+      
+      // Clear existing content
+      container.innerHTML = '';
+      indicators.innerHTML = '';
+      
+      // Add images
+      slideshowImages.forEach((image, index) => {
+        const imgDiv = document.createElement('div');
+        imgDiv.className = 'slideshow-image';
+        imgDiv.innerHTML = `
+          <img src="${image.src}" alt="${image.title}" class="w-full h-full object-cover">
+          <div class="slideshow-image-overlay">
+            ${image.title}
+          </div>
+        `;
+        container.appendChild(imgDiv);
+        
+        // Add indicator
+        const indicator = document.createElement('div');
+        indicator.className = `slideshow-indicator ${index === 0 ? 'active' : ''}`;
+        indicator.onclick = () => goToSlide(index);
+        indicators.appendChild(indicator);
+      });
+      
+      // Set initial position
+      updateSlideshowPosition();
+    }
+
+    // Update slideshow position
+    function updateSlideshowPosition() {
+      const container = document.getElementById('slideshowImages');
+      const indicators = document.querySelectorAll('.slideshow-indicator');
+      
+      container.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+      
+      // Update indicators
+      indicators.forEach((indicator, index) => {
+        indicator.classList.toggle('active', index === currentSlideIndex);
+      });
+    }
+
+    // Go to specific slide
+    function goToSlide(index) {
+      currentSlideIndex = index;
+      updateSlideshowPosition();
+      resetSlideshowTimer();
+      updateProgressBar();
+    }
+
+    // Next slide
+    function nextSlide() {
+      currentSlideIndex = (currentSlideIndex + 1) % slideshowImages.length;
+      updateSlideshowPosition();
+      
+      // Ensure smooth transition by adding a small delay
+      setTimeout(() => {
+        updateSlideshowPosition();
+      }, 50);
+    }
+
+    // Previous slide
+    function prevSlide() {
+      currentSlideIndex = currentSlideIndex === 0 ? slideshowImages.length - 1 : currentSlideIndex - 1;
+      updateSlideshowPosition();
+    }
+
+    // Start auto slideshow
+    function startSlideshow() {
+      if (slideshowImages.length > 0) {
+        // Always start the progress bar
+        updateProgressBar();
+        
+        // Only start interval if there are multiple images
+        if (slideshowImages.length > 1) {
+          slideshowInterval = setInterval(() => {
+            nextSlide();
+            updateProgressBar();
+          }, 3000); // Change every 3 seconds
+        }
+      }
+    }
+
+    // Update progress bar
+    function updateProgressBar() {
+      const progressBar = document.getElementById('slideshowProgress');
+      if (progressBar) {
+        // Reset progress bar
+        progressBar.style.width = '0%';
+        progressBar.style.transition = 'none';
+        
+        // Start progress after a short delay to ensure smooth transition
+        setTimeout(() => {
+          progressBar.style.transition = 'width 3s linear';
+          progressBar.style.width = '100%';
+        }, 100);
+      }
+    }
+
+    // Stop slideshow
+    function stopSlideshow() {
+      if (slideshowInterval) {
+        clearInterval(slideshowInterval);
+        slideshowInterval = null;
+      }
+    }
+
+    // Reset slideshow timer
+    function resetSlideshowTimer() {
+      stopSlideshow();
+      startSlideshow();
+    }
+
+        // Render dynamic sections
+    function renderDynamicSections(sections) {
+      const container = document.getElementById('dynamicSectionsContainer');
+      container.innerHTML = '';
+
+      sections.forEach(section => {
+        const sectionDiv = document.createElement('section');
+        sectionDiv.className = 'fun-section mt-[30px] p-0';
+        sectionDiv.id = `section-${section.id}`;
+
+        // Determine display style based on section name or icon
+        const isSkillSection = section.name.toLowerCase().includes('skill') || 
+                              section.icon?.includes('star') || 
+                              section.icon?.includes('code');
+        const isProjectSection = section.name.toLowerCase().includes('project') || 
+                                section.icon?.includes('rocket') || 
+                                section.icon?.includes('code');
+
+        // All sections now show only the header - no buttons, no items displayed below
+        sectionDiv.innerHTML = `
+          <div class="section-header">
+            <h2 class="section-title text-[1.5rem] text-orange-custom tracking-[1px] max-[600px]:text-[1.1rem] cursor-pointer hover:text-cyan-custom transition-colors"
+                onclick="openSectionModal(${section.id}, '${section.name}')">
+              <i class="${section.icon || 'fa-solid fa-folder'}"></i> ${section.name}
+            </h2>
+          </div>
+        `;
+        container.appendChild(sectionDiv);
+      });
+    }
+
+
+
+    // Add event listeners
+    function addEventListeners() {
+      // Slideshow navigation
+      document.getElementById('slideshowPrev').addEventListener('click', () => {
+        prevSlide();
+        resetSlideshowTimer();
+        updateProgressBar();
+      });
+
+      document.getElementById('slideshowNext').addEventListener('click', () => {
+        nextSlide();
+        resetSlideshowTimer();
+        updateProgressBar();
+      });
+
+      // Pause slideshow on hover
+      const slideshowContainer = document.querySelector('.slideshow-container');
+      slideshowContainer.addEventListener('mouseenter', stopSlideshow);
+      slideshowContainer.addEventListener('mouseleave', startSlideshow);
+
+      // Profile dropdown
+      document.getElementById('profileDropdownBtn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const dropdown = document.getElementById('profileDropdown');
+        dropdown.classList.toggle('show');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', () => {
+        document.getElementById('profileDropdown').classList.remove('show');
+      });
+
+      // Edit profile button
+      document.getElementById('editProfileBtn').addEventListener('click', () => {
+        openEditProfileModal();
+      });
+
+      // Upload memory button
+          // document.getElementById('uploadMemoryBtn').addEventListener('click', () => {
+    //   openUploadMemoryModal();
+    // });
+
+      // Add section button
+      document.getElementById('addSectionBtn').addEventListener('click', () => {
+        openAddSectionModal();
+      });
+
+      // Add section button (replaces all the old add buttons)
+      document.getElementById('addSectionBtn').addEventListener('click', () => {
+        openAddSectionModal();
+      });
+
+
+
+      // Dynamic section item clicks are handled inline in the renderDynamicSections function
+
+      // Cover image upload
+      document.getElementById('coverImageInput').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+          const response = await api.updateCoverImage(file);
+          if (response.url) {
+            document.getElementById('coverImage').src = response.url;
+            toast.success('Cover image updated successfully!');
+          }
+        } catch (error) {
+          console.error('Error updating cover image:', error);
+          toast.error('Failed to update cover image. Please try again.');
+        }
+      });
+
+      document.querySelectorAll('#certificatesGrid .memory-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          if (!item.dataset.path) return;
+          openMediaViewer(item.dataset.type, item.dataset.path);
+        });
+      });
+      document.querySelectorAll('#achievementsGrid .memory-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          if (!item.dataset.path) return;
+          openMediaViewer(item.dataset.type, item.dataset.path);
+        });
+      });
+      document.querySelectorAll('#adventuresGrid .memory-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          if (!item.dataset.path) return;
+          openMediaViewer(item.dataset.type, item.dataset.path);
+        });
+      });
+    }
+
+    // Open upload memory modal
+    // function openUploadMemoryModal() {
+    //   selectedMemoryFiles = [];
+    //   document.getElementById('memoryFileInput').value = '';
+    //   document.getElementById('memoryCaption').value = '';
+    //   document.getElementById('memoryUploadPreview').innerHTML = '';
+    //   document.getElementById('uploadMemoryModal').classList.add('show');
+    // }
+
+    // Open add section modal
+    function openAddSectionModal() {
+      document.getElementById('sectionName').value = '';
+      document.getElementById('sectionIcon').value = '';
+      document.getElementById('addSectionModal').classList.add('show');
+    }
+
+    // Open add section item modal
+    function openAddSectionItemModal(sectionId, sectionName) {
+      document.getElementById('addSectionItemSectionId').value = sectionId;
+      document.getElementById('addSectionItemTitle').textContent = `Add Item to ${sectionName}`;
+      document.getElementById('addSectionItemSubmitBtn').textContent = 'Add Item';
+      document.getElementById('itemTitle').value = '';
+      document.getElementById('itemIcon').value = '';
+      document.getElementById('itemDescription').value = '';
+      document.getElementById('itemColor').value = 'cyan-custom';
+          document.getElementById('itemFile').value = '';
+    document.getElementById('itemFilePreview').innerHTML = '';
+    document.getElementById('selectedFilesContainer').innerHTML = '';
+      
+      // Show/hide fields based on section type
+      const descriptionDiv = document.getElementById('itemDescription').parentElement;
+      const colorDiv = document.getElementById('itemColorDiv');
+      
+      const isSkillSection = sectionName.toLowerCase().includes('skill') || 
+                            sectionName.toLowerCase().includes('star') || 
+                            sectionName.toLowerCase().includes('code');
+      const isProjectSection = sectionName.toLowerCase().includes('project') || 
+                              sectionName.toLowerCase().includes('rocket');
+      
+      if (isProjectSection) {
+        descriptionDiv.style.display = 'block';
+        colorDiv.style.display = 'none';
+      } else if (isSkillSection) {
+        descriptionDiv.style.display = 'none';
+        colorDiv.style.display = 'block';
+      } else {
+        descriptionDiv.style.display = 'block';
+        colorDiv.style.display = 'none';
+      }
+      
+      document.getElementById('addSectionItemModal').classList.add('show');
+    }
+
+    // Open section modal (shows all items in a section)
+    function openSectionModal(sectionId, sectionName) {
+      const section = profileData.sections.find(s => s.id == sectionId);
+      if (section) {
+        // Store current section info for edit/delete
+        window.currentSectionModal = { sectionId, sectionName };
+        
+        document.getElementById('sectionModalTitle').textContent = sectionName;
+        document.getElementById('addItemToSectionBtn').onclick = () => openAddSectionItemModal(sectionId, sectionName);
+        
+        const container = document.getElementById('sectionItemsContainer');
+        container.innerHTML = '';
+        
+        section.items.forEach(item => {
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'bg-item-bg rounded-lg p-4 hover:bg-cyan-custom hover:text-dark-bg transition-all duration-300 relative group';
+          
+          itemDiv.innerHTML = `
+            <div class="flex items-center gap-3 cursor-pointer" onclick="openItemGalleryModal(${sectionId}, ${item.id})">
+              <i class="${item.icon || 'fa-solid fa-star'} text-xl"></i>
+              <div class="flex-1">
+                <h3 class="font-bold text-lg">${item.title}</h3>
+                ${item.description ? `<p class="text-sm opacity-80">${item.description}</p>` : ''}
+                ${(() => {
+                  if (!item.file_path) return '';
+                  try {
+                    const files = JSON.parse(item.file_path);
+                    if (Array.isArray(files) && files.length > 0) {
+                      return `<p class="text-xs text-cyan-custom mt-1"><i class="fa-solid fa-paperclip"></i> ${files.length} file${files.length > 1 ? 's' : ''} attached</p>`;
+                    }
+                  } catch (e) {
+                    // Single file (backward compatibility)
+                  }
+                  return `<p class="text-xs text-cyan-custom mt-1"><i class="fa-solid fa-paperclip"></i> File attached</p>`;
+                })()}
+              </div>
+            </div>
+            
+            <!-- Item Action Buttons -->
+            <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <button class="item-edit-btn bg-yellow-custom text-dark-bg p-2 rounded-full hover:bg-orange-custom transition-all duration-200 text-sm"
+                      onclick="event.stopPropagation(); openEditSectionItemModal(${sectionId}, ${item.id})"
+                      title="Edit ${item.title}">
+                <i class="fa-solid fa-edit"></i>
+              </button>
+              <button class="item-delete-btn bg-red-custom text-white p-2 rounded-full hover:bg-red-600 transition-all duration-200 text-sm"
+                      onclick="event.stopPropagation(); deleteSectionItemConfirm(${item.id}, '${item.title}')"
+                      title="Delete ${item.title}">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          `;
+          container.appendChild(itemDiv);
+        });
+        
+        document.getElementById('sectionModal').classList.add('show');
+      }
+    }
+
+    // Open item gallery modal (shows item details and files)
+    function openItemGalleryModal(sectionId, itemId) {
+      const section = profileData.sections.find(s => s.id == sectionId);
+      const item = section?.items.find(i => i.id == itemId);
+      
+      if (item) {
+        document.getElementById('itemGalleryTitle').textContent = item.title;
+        
+        // Store current item info for edit/delete
+        window.currentGalleryItem = { sectionId, itemId };
+        
+        // Show item files if exists
+        const imageContainer = document.getElementById('galleryImageContainer');
+        if (item.file_path) {
+          try {
+            // Try to parse as JSON (multiple files)
+            const files = JSON.parse(item.file_path);
+            if (Array.isArray(files) && files.length > 0) {
+              // Multiple files - implement pagination
+              const filesPerPage = 8; // 4 images per row, 2 rows
+              const totalPages = Math.ceil(files.length / filesPerPage);
+              
+              // Store files data for pagination
+              window.currentGalleryFiles = files;
+              window.currentGalleryPage = 0;
+              window.currentGalleryTotalPages = totalPages;
+              
+              // No pagination controls needed - using existing buttons
+              let paginationHTML = '';
+              
+              // Create gallery grid
+              let galleryHTML = paginationHTML + '<div class="grid grid-cols-2 md:grid-cols-4 gap-4">';
+              
+              const startIndex = window.currentGalleryPage * filesPerPage;
+              const endIndex = Math.min(startIndex + filesPerPage, files.length);
+              
+              for (let i = startIndex; i < endIndex; i++) {
+                const file = files[i];
+                if (file.type === 'image') {
+                  galleryHTML += `
+                    <div class="relative group">
+                      <img src="${file.path}" class="w-full h-32 md:h-40 object-cover rounded-lg border border-cyan-custom/30" alt="${item.title}">
+                      <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 rounded-lg flex items-center justify-center">
+                        <button onclick="openMediaViewer('image', '${file.path}')" class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-cyan-custom text-dark-bg px-3 py-1 rounded text-sm font-bold">
+                          <i class="fa-solid fa-expand mr-1"></i>View 
+                        </button>
+                      </div>
+                    </div>
+                  `;
+                } else if (file.type === 'video') {
+                  galleryHTML += `
+                    <div class="relative group">
+                      <video class="w-full h-32 md:h-40 object-cover rounded-lg border border-cyan-custom/30" controls>
+                        <source src="${file.path}" type="video/mp4">
+                      </video>
+                      <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 rounded-lg flex items-center justify-center">
+                        <button onclick="openMediaViewer('video', '${file.path}')" class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-cyan-custom text-dark-bg px-3 py-1 rounded text-sm font-bold">
+                          <i class="fa-solid fa-expand mr-1"></i>View
+                        </button>
+                      </div>
+                    </div>
+                  `;
+                } else {
+                  galleryHTML += `
+                    <div class="relative group bg-item-bg p-3 rounded-lg border border-cyan-custom/30 flex items-center justify-center h-32 md:h-40">
+                      <div class="text-center">
+                        <i class="fa-solid fa-file text-2xl text-cyan-custom mb-1"></i>
+                        <p class="text-white text-xs">${file.path}</p>
+                        <a href="${file.path}" download class="mt-1 inline-block bg-cyan-custom text-dark-bg px-2 py-1 rounded text-xs hover:bg-orange-custom transition-colors">
+                          <i class="fa-solid fa-download mr-1"></i>Download
+                        </a>
+                      </div>
+                    </div>
+                  `;
+                }
+              }
+              
+                                  galleryHTML += '</div>';
+              imageContainer.innerHTML = galleryHTML;
+              
+                            // Update button states for initial load
+              const leftArrow = document.getElementById('galleryLeftArrow');
+              const rightArrow = document.getElementById('galleryRightArrow');
+              
+              if (leftArrow && totalPages > 1) {
+                if (window.currentGalleryPage === 0) {
+                  leftArrow.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                  leftArrow.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+              }
+              
+              if (rightArrow && totalPages > 1) {
+                if (window.currentGalleryPage === totalPages - 1) {
+                  rightArrow.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                  rightArrow.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+              }
+            } else {
+              // Single file (backward compatibility)
+              if (item.file_type === 'image') {
+                imageContainer.innerHTML = `<img src="${item.file_path}" style="max-width: 100%; max-height: 400px; border-radius: 10px;" alt="${item.title}">`;
+              } else if (item.file_type === 'video') {
+                imageContainer.innerHTML = `<video controls style="max-width: 100%; max-height: 400px; border-radius: 10px;">
+                  <source src="${item.file_path}" type="video/mp4">
+                </video>`;
+              } else {
+                imageContainer.innerHTML = `<div class="text-center">
+                  <i class="fa-solid fa-file text-6xl text-cyan-custom mb-4"></i>
+                  <p class="text-white">${item.file_path}</p>
+                </div>`;
+              }
+            }
+          } catch (e) {
+            // Single file (backward compatibility)
+            if (item.file_type === 'image') {
+              imageContainer.innerHTML = `<img src="${item.file_path}" style="max-width: 100%; max-height: 400px; border-radius: 10px;" alt="${item.title}">`;
+            } else if (item.file_type === 'video') {
+              imageContainer.innerHTML = `<video controls style="max-width: 100%; max-height: 400px; border-radius: 10px;">
+                <source src="${item.file_path}" type="video/mp4">
+              </video>`;
+            } else {
+              imageContainer.innerHTML = `<div class="text-center">
+                <i class="fa-solid fa-file text-6xl text-cyan-custom mb-4"></i>
+                <p class="text-white">${item.file_path}</p>
+              </div>`;
+            }
+          }
+        } else {
+          imageContainer.innerHTML = `<div class="text-center">
+            <i class="fa-solid fa-image text-6xl text-gray-500 mb-4"></i>
+            <p class="text-gray-400">No files attached</p>
+          </div>`;
+        }
+        
+        // Hide arrows if no files
+        const leftArrow = document.getElementById('galleryLeftArrow');
+        const rightArrow = document.getElementById('galleryRightArrow');
+        if (!item.file_path) {
+          leftArrow.style.display = 'none';
+          rightArrow.style.display = 'none';
+        } else {
+          leftArrow.style.display = 'block';
+          rightArrow.style.display = 'block';
+        }
+        
+        document.getElementById('itemGalleryModal').classList.add('show');
+      }
+    }
+
+    // Open edit section modal
+    function openEditSectionModal(sectionId) {
+      const section = profileData.sections.find(s => s.id == sectionId);
+      if (section) {
+        document.getElementById('editSectionId').value = sectionId;
+        document.getElementById('editSectionName').value = section.name;
+        document.getElementById('editSectionIcon').value = section.icon || '';
+        document.getElementById('editSectionModal').classList.add('show');
+      }
+    }
+
+    // Open edit section item modal
+    function openEditSectionItemModal(sectionId, itemId) {
+      // Find the item in profileData
+      const section = profileData.sections.find(s => s.id == sectionId);
+      const item = section?.items.find(i => i.id == itemId);
+      
+      if (item) {
+        // Set form data attributes for edit mode
+        const form = document.getElementById('addSectionItemForm');
+        form.dataset.editMode = 'true';
+        form.dataset.editItemId = itemId;
+        form.dataset.editSectionId = sectionId;
+        
+        document.getElementById('addSectionItemSectionId').value = sectionId;
+        document.getElementById('addSectionItemTitle').textContent = `Edit Item in ${section.name}`;
+        document.getElementById('addSectionItemSubmitBtn').textContent = 'Update Item';
+        document.getElementById('itemTitle').value = item.title;
+        document.getElementById('itemIcon').value = item.icon || '';
+        document.getElementById('itemDescription').value = item.description || '';
+        document.getElementById('itemColor').value = item.color || 'cyan-custom';
+        document.getElementById('itemFile').value = '';
+        document.getElementById('selectedFilesContainer').innerHTML = '';
+        
+        // Show/hide fields based on section type
+        const descriptionDiv = document.getElementById('itemDescription').parentElement;
+        const colorDiv = document.getElementById('itemColorDiv');
+        
+        const isSkillSection = section.name.toLowerCase().includes('skill') || 
+                              section.icon?.includes('star') || 
+                              section.icon?.includes('code');
+        const isProjectSection = section.name.toLowerCase().includes('project') || 
+                                section.icon?.includes('rocket');
+        
+        if (isProjectSection) {
+          descriptionDiv.style.display = 'block';
+          colorDiv.style.display = 'none';
+        } else if (isSkillSection) {
+          descriptionDiv.style.display = 'none';
+          colorDiv.style.display = 'block';
+        } else {
+          descriptionDiv.style.display = 'block';
+          colorDiv.style.display = 'none';
+        }
+        
+        // Show current files preview
+        const filePreview = document.getElementById('itemFilePreview');
+        const selectedFilesContainer = document.getElementById('selectedFilesContainer');
+        
+        // Store existing files for edit mode
+        let existingFiles = [];
+        
+        if (item.file_path) {
+          try {
+            // Try to parse as JSON (multiple files)
+            const files = JSON.parse(item.file_path);
+            if (Array.isArray(files)) {
+              // Multiple files
+              existingFiles = files;
+              filePreview.innerHTML = '';
+              selectedFilesContainer.innerHTML = '';
+              
+              files.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'flex items-center justify-between p-3 bg-item-bg rounded-lg border border-cyan-custom/30 mb-2';
+                fileItem.dataset.existingFile = JSON.stringify(file);
+                fileItem.dataset.fileIndex = index;
+                
+                const fileInfo = document.createElement('div');
+                fileInfo.className = 'flex items-center space-x-3';
+                
+                let fileIcon = 'fa-file';
+                if (file.type === 'image') fileIcon = 'fa-image';
+                else if (file.type === 'video') fileIcon = 'fa-video';
+                else if (file.path.includes('.pdf')) fileIcon = 'fa-file-pdf';
+                else if (file.path.includes('.doc')) fileIcon = 'fa-file-word';
+                
+                fileInfo.innerHTML = `
+                  <i class="fa-solid ${fileIcon} text-cyan-custom text-xl"></i>
+                  <div>
+                    <div class="text-white font-medium">${file.path}</div>
+                    <div class="text-gray-400 text-sm">Current file</div>
+                  </div>
+                `;
+                
+                // Remove button for existing files
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'text-red-custom hover:text-red-400 transition-colors';
+                removeBtn.innerHTML = '<i class="fa-solid fa-times"></i>';
+                removeBtn.onclick = () => {
+                  fileItem.remove();
+                  // Remove from existing files array
+                  existingFiles.splice(index, 1);
+                  // Update the form's existing files data
+                  form.dataset.existingFiles = JSON.stringify(existingFiles);
+                  // Also remove from preview
+                  const previewItems = filePreview.querySelectorAll('.inline-block');
+                  if (previewItems[index]) {
+                    previewItems[index].remove();
+                  }
+                  // Update file count display in the item list
+                  updateFileCountDisplay();
+                };
+                
+                fileItem.appendChild(fileInfo);
+                fileItem.appendChild(removeBtn);
+                selectedFilesContainer.appendChild(fileItem);
+                
+                // Create preview for images and videos
+                if (file.type === 'image') {
+                  const imgPreview = document.createElement('div');
+                  imgPreview.className = 'inline-block mr-2 mb-2';
+                  imgPreview.innerHTML = `
+                    <div class="relative">
+                      <img src="${file.path}" class="w-20 h-20 object-cover rounded-lg border border-cyan-custom/30" alt="Preview">
+                      <button onclick="this.parentElement.remove()" class="absolute -top-2 -right-2 bg-red-custom text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                        <i class="fa-solid fa-times"></i>
+                      </button>
+                    </div>
+                  `;
+                  filePreview.appendChild(imgPreview);
+                } else if (file.type === 'video') {
+                  const videoPreview = document.createElement('div');
+                  videoPreview.className = 'inline-block mr-2 mb-2';
+                  videoPreview.innerHTML = `
+                    <div class="relative">
+                      <video src="${file.path}" class="w-20 h-20 object-cover rounded-lg border border-cyan-custom/30" controls></video>
+                      <button onclick="this.parentElement.remove()" class="absolute -top-2 -right-2 bg-red-custom text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                        <i class="fa-solid fa-times"></i>
+                      </button>
+                    </div>
+                  `;
+                  filePreview.appendChild(videoPreview);
+                }
+              });
+            } else {
+              // Single file (backward compatibility)
+              existingFiles = [{ path: item.file_path, type: item.file_type }];
+              if (item.file_type === 'image') {
+                filePreview.innerHTML = `<img src="${item.file_path}" class="file-preview" alt="Current file">`;
+              } else {
+                filePreview.innerHTML = `<p class="text-cyan-custom">Current file: ${item.file_path}</p>`;
+              }
+            }
+          } catch (e) {
+            // Single file (backward compatibility)
+            existingFiles = [{ path: item.file_path, type: item.file_type }];
+            if (item.file_type === 'image') {
+              filePreview.innerHTML = `<img src="${item.file_path}" class="file-preview" alt="Current file">`;
+            } else {
+              filePreview.innerHTML = `<p class="text-cyan-custom">Current file: ${item.file_path}</p>`;
+            }
+          }
+        } else {
+          filePreview.innerHTML = '';
+        }
+        
+        // Store existing files in form data
+        form.dataset.existingFiles = JSON.stringify(existingFiles);
+        
+        // Update file count display
+        updateFileCountDisplay();
+        
+        document.getElementById('addSectionItemModal').classList.add('show');
+      }
+    }
+
+    // Handle memory file selection
+    // function handleMemoryFiles(files) {
+    //   const preview = document.getElementById('memoryUploadPreview');
+
+    //   Array.from(files).forEach((file, index) => {
+    //     // Check file size (10MB limit)
+    //     const maxSize = 10 * 1024 * 1024; // 10MB
+    //     if (file.size > maxSize) {
+    //       toast.error(`File "${file.name}" is too large. Maximum size is 10MB.`);
+    //       return;
+    //     }
+
+    //     // Check file type
+    //     if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+    //       selectedMemoryFiles.push(file);
+
+    //       const reader = new FileReader();
+    //       reader.onload = (e) => {
+    //         const previewItem = document.createElement('div');
+    //         previewItem.className = 'preview-item';
+    //         previewItem.innerHTML = `
+    //             ${file.type.startsWith('image/')
+    //             ? `<img src="${e.target.result}" alt="Preview">`
+    //             : `<video src="${e.target.result}" muted>
+    //                    <source src="${e.target.result}" type="${file.type}">
+    //                  </video>
+    //                  <div class="play-icon" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 12px;">
+    //                     <i class="fa-solid fa-play"></i>
+    //                   </div>`
+    //             }
+    //               <button type="button" class="remove-preview" onclick="removeMemoryPreview(${selectedMemoryFiles.length - 1})">
+    //                 <i class="fa-solid fa-times"></i>
+    //               </button>
+    //             `;
+    //           preview.appendChild(previewItem);
+    //         };
+    //         reader.readAsDataURL(file);
+    //       }
+    //     }
+    //   });
+    // }
+
+    // Remove memory preview
+    // function removeMemoryPreview(index) {
+    //   selectedMemoryFiles.splice(index, 1);
+    //   const preview = document.getElementById('memoryUploadPreview');
+    //   preview.children[index].remove();
+
+    //   // Update indices for remaining items
+    //   Array.from(preview.children).forEach((item, newIndex) => {
+    //     const removeBtn = item.querySelector('.remove-preview');
+    //     removeBtn.setAttribute('onclick', `removeMemoryPreview(${newIndex})`);
+    //   });
+    // }
+
+    // Memory upload area events
+    // document.getElementById('memoryUploadArea').addEventListener('click', () => {
+    //   document.getElementById('memoryFileInput').click();
+    // });
+
+    // document.getElementById('memoryFileInput').addEventListener('change', (e) => {
+    //   handleMemoryFiles(e.target.files);
+    // });
+
+    // Drag and drop for memory upload
+    // const uploadArea = document.getElementById('memoryUploadArea');
+
+    // uploadArea.addEventListener('dragover', (e) => {
+    //   e.preventDefault();
+    //   uploadArea.classList.add('dragover');
+    // });
+
+    // uploadArea.addEventListener('dragleave', () => {
+    //   uploadArea.classList.remove('dragover');
+    // });
+
+    // uploadArea.addEventListener('drop', (e) => {
+    //   e.preventDefault();
+    //   uploadArea.classList.remove('dragover');
+    //   handleMemoryFiles(e.dataTransfer.files);
+    // });
+
+    // Open edit profile modal
+    function openEditProfileModal() {
+      const { user, highlights } = profileData;
+
+      document.getElementById('editName').value = user.name;
+      document.getElementById('editUsername').value = user.username || '';
+      document.getElementById('editIntroText').value = user.intro_text;
+      document.getElementById('editProfilePic').value = '';
+      document.getElementById('editCoverImage').value = '';
+      document.getElementById('profilePicPreview').innerHTML = '';
+      document.getElementById('coverImagePreview').innerHTML = '';
+
+      // Populate highlights
+      const highlightsInputs = document.getElementById('highlightsInputs');
+      highlightsInputs.innerHTML = highlights.map((h, index) => `
+          <div class="flex items-center gap-2 mb-2">
+            <input type="text" class="highlight-input" value="${h.highlight_text}" data-index="${index}">
+            <button type="button" class="text-red-custom hover:text-red-600" onclick="removeHighlight(${index})">
+              <i class="fa-solid fa-times"></i>
+            </button>
+          </div>
+        `).join('');
+
+      // Set profile URLs (both profile ID and username)
+      const profileIdUrl = `${window.location.origin}/profile/${user.profile_id}`;
+      const usernameUrl = user.username ? `${window.location.origin}/@${user.username}` : '';
+      const displayUrl = usernameUrl || profileIdUrl;
+      document.getElementById('profileUrlDisplay').textContent = displayUrl;
+      
+      // Store both URLs for copy functionality
+      document.getElementById('profileUrlDisplay').dataset.profileIdUrl = profileIdUrl;
+      document.getElementById('profileUrlDisplay').dataset.usernameUrl = usernameUrl;
+      
+      // Reset file upload displays
+      document.getElementById('selectedProfilePicName').classList.add('hidden');
+      document.getElementById('selectedCoverImageName').classList.add('hidden');
+      document.getElementById('copySuccessMessage').classList.add('hidden');
+
+      document.getElementById('editProfileModal').classList.add('show');
+    }
+
+    // Open content edit modal
+    function openContentEditModal(type, id) {
+      currentEditType = type;
+      currentEditId = id;
+      isEditMode = id !== 'new';
+
+      // Clear form
+      document.getElementById('contentType').value = type;
+      document.getElementById('contentId').value = id;
+      document.getElementById('contentTitle').value = '';
+      document.getElementById('contentDescription').value = '';
+      document.getElementById('contentIcon').value = '';
+      document.getElementById('contentColor').value = 'cyan-custom';
+      document.getElementById('contentFile').value = '';
+      document.getElementById('contentFilePreview').innerHTML = '';
+
+      if (isEditMode) {
+        const item = profileData[type].find(item => item.id == id);
+
+        document.getElementById('contentTitle').value = item.title || item.name || '';
+        document.getElementById('contentDescription').value = item.description || '';
+        document.getElementById('contentIcon').value = item.icon || '';
+        document.getElementById('contentColor').value = item.color || 'cyan-custom';
+
+        // Show file preview if exists
+        const filePreview = document.getElementById('contentFilePreview');
+        if (item.file_path) {
+          if (item.file_type === 'image') {
+            filePreview.innerHTML = `<img src="${item.file_path}" class="file-preview" alt="Current file">`;
+          } else if (item.file_type === 'video') {
+            filePreview.innerHTML = `<video src="${item.file_path}" class="file-preview" controls></video>`;
+          } else {
+            filePreview.innerHTML = `<p class="text-cyan-custom">Current file: ${item.file_path}</p>`;
+          }
+        }
+      }
+
+      // Show/hide fields based on type
+      const descriptionDiv = document.getElementById('contentDescriptionDiv');
+      const colorDiv = document.getElementById('contentColorDiv');
+      const deleteBtn = document.getElementById('deleteContent');
+
+      if (type === 'projects') {
+        descriptionDiv.style.display = 'block';
+        colorDiv.style.display = 'none';
+      } else if (type === 'skills') {
+        descriptionDiv.style.display = 'none';
+        colorDiv.style.display = 'block';
+      } else {
+        descriptionDiv.style.display = 'none';
+        colorDiv.style.display = 'none';
+      }
+
+      // Show/hide delete button
+      deleteBtn.style.display = isEditMode ? 'block' : 'none';
+
+      document.getElementById('contentModalTitle').textContent =
+        `${isEditMode ? 'Edit' : 'Add'} ${type.slice(0, -1)}`;
+      document.getElementById('contentEditModal').classList.add('show');
+    }
+
+    // Add highlight input
+    document.getElementById('addHighlight').addEventListener('click', () => {
+      const highlightsInputs = document.getElementById('highlightsInputs');
+      const index = highlightsInputs.children.length;
+      const newHighlight = document.createElement('div');
+      newHighlight.className = 'flex items-center gap-2 mb-2';
+      newHighlight.innerHTML = `
+          <input type="text" class="highlight-input" placeholder="New highlight" data-index="${index}">
+          <button type="button" class="text-red-custom hover:text-red-600" onclick="removeHighlight(${index})">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        `;
+      highlightsInputs.appendChild(newHighlight);
+    });
+
+    // Remove highlight
+    function removeHighlight(index) {
+      const highlightsInputs = document.getElementById('highlightsInputs');
+      const highlightDivs = highlightsInputs.children;
+      if (highlightDivs[index]) {
+        highlightDivs[index].remove();
+      }
+    }
+
+    // File preview handlers
+    document.getElementById('editProfilePic').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const preview = document.getElementById('profilePicPreview');
+
+      if (file) {
+        // Check file size (10MB limit)
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        if (file.size > maxSize) {
+          toast.error(`File "${file.name}" is too large. Maximum size is 10MB.`);
+          e.target.value = '';
+          preview.innerHTML = '';
+          return;
+        }
+
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            preview.innerHTML = `<img src="${e.target.result}" class="file-preview" alt="Profile preview">`;
+          };
+          reader.readAsDataURL(file);
+        } else {
+          preview.innerHTML = '';
+        }
+      } else {
+        preview.innerHTML = '';
+      }
+    });
+
+    document.getElementById('editCoverImage').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const preview = document.getElementById('coverImagePreview');
+
+      if (file) {
+        // Check file size (10MB limit)
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        if (file.size > maxSize) {
+          toast.error(`File "${file.name}" is too large. Maximum size is 10MB.`);
+          e.target.value = '';
+          preview.innerHTML = '';
+          return;
+        }
+
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            preview.innerHTML = `<img src="${e.target.result}" class="file-preview" alt="Cover preview">`;
+          };
+          reader.readAsDataURL(file);
+        } else {
+          preview.innerHTML = '';
+        }
+      } else {
+        preview.innerHTML = '';
+      }
+    });
+
+    document.getElementById('contentFile').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const preview = document.getElementById('contentFilePreview');
+
+      if (file) {
+        // Check file size (10MB limit)
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        if (file.size > maxSize) {
+          toast.error(`File "${file.name}" is too large. Maximum size is 10MB.`);
+          e.target.value = '';
+          preview.innerHTML = '';
+          return;
+        }
+
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            preview.innerHTML = `<img src="${e.target.result}" class="file-preview" alt="File preview">`;
+          };
+          reader.readAsDataURL(file);
+        } else if (file.type.startsWith('video/')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            preview.innerHTML = `<video src="${e.target.result}" class="file-preview" controls></video>`;
+          };
+          reader.readAsDataURL(file);
+        } else {
+          preview.innerHTML = `<p class="text-cyan-custom">Selected: ${file.name}</p>`;
+        }
+      } else {
+        preview.innerHTML = '';
+      }
+    });
+
+    // File preview for section items (multiple files)
+    document.getElementById('itemFile').addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      const preview = document.getElementById('itemFilePreview');
+      const selectedFilesContainer = document.getElementById('selectedFilesContainer');
+      
+      // Clear previous previews
+      preview.innerHTML = '';
+      selectedFilesContainer.innerHTML = '';
+      
+      if (files.length > 0) {
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        const maxFiles = 10; // Maximum 10 files
+        
+        if (files.length > maxFiles) {
+          toast.error(`Maximum ${maxFiles} files allowed.`);
+          e.target.value = '';
+          return;
+        }
+        
+        files.forEach((file, index) => {
+          // Check file size
+          if (file.size > maxSize) {
+            toast.error(`File "${file.name}" is too large. Maximum size is 10MB.`);
+            return;
+          }
+          
+          // Create file display item
+          const fileItem = document.createElement('div');
+          fileItem.className = 'flex items-center justify-between p-3 bg-item-bg rounded-lg border border-cyan-custom/30';
+          fileItem.dataset.fileIndex = index;
+          
+          const fileInfo = document.createElement('div');
+          fileInfo.className = 'flex items-center space-x-3';
+          
+          // File icon based on type
+          let fileIcon = 'fa-file';
+          if (file.type.startsWith('image/')) fileIcon = 'fa-image';
+          else if (file.type.startsWith('video/')) fileIcon = 'fa-video';
+          else if (file.type.includes('pdf')) fileIcon = 'fa-file-pdf';
+          else if (file.type.includes('word')) fileIcon = 'fa-file-word';
+          
+          fileInfo.innerHTML = `
+            <i class="fa-solid ${fileIcon} text-cyan-custom text-xl"></i>
+            <div>
+              <div class="text-white font-medium">${file.name}</div>
+              <div class="text-gray-400 text-sm">${(file.size / 1024 / 1024).toFixed(2)} MB</div>
+            </div>
+          `;
+          
+          // Remove button
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'text-red-custom hover:text-red-400 transition-colors';
+          removeBtn.innerHTML = '<i class="fa-solid fa-times"></i>';
+          removeBtn.onclick = () => {
+            fileItem.remove();
+            // Update file input
+            const dt = new DataTransfer();
+            const remainingFiles = Array.from(e.target.files).filter((_, i) => i !== index);
+            remainingFiles.forEach(file => dt.items.add(file));
+            e.target.files = dt.files;
+          };
+          
+          fileItem.appendChild(fileInfo);
+          fileItem.appendChild(removeBtn);
+          selectedFilesContainer.appendChild(fileItem);
+          
+          // Create preview for images and videos
+          if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const imgPreview = document.createElement('div');
+              imgPreview.className = 'inline-block mr-2 mb-2';
+              imgPreview.innerHTML = `
+                <div class="relative">
+                  <img src="${e.target.result}" class="w-20 h-20 object-cover rounded-lg border border-cyan-custom/30" alt="Preview">
+                  <button onclick="this.parentElement.remove()" class="absolute -top-2 -right-2 bg-red-custom text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                    <i class="fa-solid fa-times"></i>
+                  </button>
+                </div>
+              `;
+              preview.appendChild(imgPreview);
+            };
+            reader.readAsDataURL(file);
+          } else if (file.type.startsWith('video/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const videoPreview = document.createElement('div');
+              videoPreview.className = 'inline-block mr-2 mb-2';
+              videoPreview.innerHTML = `
+                <div class="relative">
+                  <video src="${e.target.result}" class="w-20 h-20 object-cover rounded-lg border border-cyan-custom/30" controls></video>
+                  <button onclick="this.parentElement.remove()" class="absolute -top-2 -right-2 bg-red-custom text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                    <i class="fa-solid fa-times"></i>
+                  </button>
+                </div>
+              `;
+              preview.appendChild(videoPreview);
+            };
+            reader.readAsDataURL(file);
+          }
+          
+          // Update file count display after adding new files
+          setTimeout(() => updateFileCountDisplay(), 100);
+        });
+      }
+    });
+
+    // Form submissions
+    document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const name = document.getElementById('editName').value;
+        const username = document.getElementById('editUsername').value;
+        const intro_text = document.getElementById('editIntroText').value;
+        const highlightInputs = document.querySelectorAll('.highlight-input');
+        const highlights = Array.from(highlightInputs)
+          .map(input => input.value.trim())
+          .filter(value => value);
+
+        // Update profile data
+        await api.updateProfile({ name, username, intro_text, highlights });
+
+        // Update profile picture if changed
+        const profilePicFile = document.getElementById('editProfilePic').files[0];
+        if (profilePicFile) {
+          await api.updateProfilePicture(profilePicFile);
+        }
+
+        // Update cover image if changed
+        const coverImageFile = document.getElementById('editCoverImage').files[0];
+        if (coverImageFile) {
+          await api.updateCoverImage(coverImageFile);
+        }
+
+        // Reload profile
+        await loadProfile();
+        closeEditProfileModal();
+
+        toast.success('Profile updated successfully!');
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        toast.error('Error updating profile. Please try again.');
+      }
+    });
+
+    // Add section form submission
+    document.getElementById('addSectionForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const name = document.getElementById('sectionName').value;
+        const icon = document.getElementById('sectionIcon').value;
+
+        await api.createSection({ name, icon });
+
+        // Reload profile to get updated sections
+        await loadProfile();
+        closeAddSectionModal();
+
+        toast.success('Section created successfully!');
+      } catch (error) {
+        console.error('Error creating section:', error);
+        toast.error('Error creating section. Please try again.');
+      }
+    });
+
+    // Add section item form submission
+    document.getElementById('addSectionItemForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const sectionId = document.getElementById('addSectionItemSectionId').value;
+        const title = document.getElementById('itemTitle').value;
+        const icon = document.getElementById('itemIcon').value;
+        const description = document.getElementById('itemDescription').value;
+        const color = document.getElementById('itemColor').value;
+        const files = Array.from(document.getElementById('itemFile').files);
+
+        // Check if we're in edit mode
+        const form = e.target;
+        const isEditMode = form.dataset.editMode === 'true';
+        const editItemId = form.dataset.editItemId;
+
+        console.log('Form submission:', { isEditMode, editItemId, filesCount: files.length });
+
+        if (isEditMode && editItemId) {
+          // Update existing item - send new files and existing files data
+          const existingFilesData = form.dataset.existingFiles;
+          let existingFiles = [];
+          if (existingFilesData) {
+            try {
+              existingFiles = JSON.parse(existingFilesData);
+            } catch (e) {
+              console.error('Error parsing existing files:', e);
+            }
+          }
+          
+          // Send both existing files (for removal tracking) and new files
+          const updateData = { 
+            itemId: editItemId, 
+            title, 
+            icon, 
+            description,
+            existingFiles: JSON.stringify(existingFiles)
+          };
+          
+          await api.updateSectionItem(updateData, files);
+          toast.success('Item updated successfully!');
+        } else {
+          // Add new item
+          await api.addSectionItem({ sectionId, title, icon, description, color }, files);
+          toast.success('Item added successfully!');
+        }
+
+        // Reload profile to get updated sections
+        await loadProfile();
+        
+        // Reset form data attributes
+        form.dataset.editMode = 'false';
+        form.dataset.editItemId = '';
+        form.dataset.editSectionId = '';
+        form.dataset.existingFiles = '';
+        
+        closeAddSectionItemModal();
+
+      } catch (error) {
+        console.error('Error saving item:', error);
+        toast.error('Error saving item. Please try again.');
+      }
+    });
+
+    // Edit section form submission
+    document.getElementById('editSectionForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const sectionId = document.getElementById('editSectionId').value;
+        const name = document.getElementById('editSectionName').value;
+        const icon = document.getElementById('editSectionIcon').value;
+
+        await api.updateSection({ sectionId, name, icon });
+
+        // Reload profile to get updated sections
+        await loadProfile();
+        closeEditSectionModal();
+
+        toast.success('Section updated successfully!');
+      } catch (error) {
+        console.error('Error updating section:', error);
+        toast.error('Error updating section. Please try again.');
+      }
+    });
+
+    document.getElementById('contentEditForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const type = document.getElementById('contentType').value;
+        const id = document.getElementById('contentId').value;
+        const title = document.getElementById('contentTitle').value;
+        const description = document.getElementById('contentDescription').value;
+        const icon = document.getElementById('contentIcon').value;
+        const color = document.getElementById('contentColor').value;
+        const file = document.getElementById('contentFile').files[0];
+
+        const data = { title, icon };
+        if (type === 'projects') {
+          data.description = description;
+        } else if (type === 'skills') {
+          data.name = title;
+          data.color = color;
+        }
+        if (type === 'certificates' || type === 'achievements' || type === 'adventures') {
+          data.title = title;
+          data.icon = icon;
+        }
+
+        if (isEditMode) {
+          await api.updateContent(type, id, data, file);
+        } else {
+          await api.addContent(type, data, file);
+        }
+
+        // Reload profile
+        await loadProfile();
+        closeContentEditModal();
+
+        toast.success(`${type.slice(0, -1)} ${isEditMode ? 'updated' : 'added'} successfully!`);
+      } catch (error) {
+        console.error('Error saving content:', error);
+        toast.error('Error saving content. Please try again.');
+      }
+    });
+
+    // Upload memory form submission
+    // document.getElementById('uploadMemoryForm').addEventListener('submit', async (e) => {
+    //   e.preventDefault();
+
+    //   if (selectedMemoryFiles.length === 0) {
+    //     toast.warning('Please select at least one file to upload.');
+    //     return;
+    //   }
+
+    //   try {
+    //     const caption = document.getElementById('memoryCaption').value;
+    //     const uploadPromises = selectedMemoryFiles.map(file =>
+    //       api.uploadMemory(file, caption)
+    //     );
+
+    //     await Promise.all(uploadPromises);
+
+    //     // Reload memories
+    //     await loadMemories();
+    //     closeUploadMemoryModal();
+
+    //     toast.success('Memories uploaded successfully!');
+    //   } catch (error) {
+    //     console.error('Error uploading memories:', error);
+    //     toast.error('Error uploading memories. Please try again.');
+    //   }
+    // });
+
+    // Delete content
+    document.getElementById('deleteContent').addEventListener('click', async () => {
+      if (confirm('Are you sure you want to delete this item?')) {
+        try {
+          const type = document.getElementById('contentType').value;
+          const id = document.getElementById('contentId').value;
+
+          await api.deleteContent(type, id);
+
+          // Reload profile
+          await loadProfile();
+          closeContentEditModal();
+
+          toast.success('Content deleted successfully!');
+              } catch (error) {
+        console.error('Error deleting content:', error);
+        toast.error('Error deleting content. Please try again.');
+      }
+      }
+    });
+
+    // Modal close handlers
+    function closeEditProfileModal() {
+      document.getElementById('editProfileModal').classList.remove('show');
+    }
+
+    function closeContentEditModal() {
+      document.getElementById('contentEditModal').classList.remove('show');
+    }
+
+    // function closeUploadMemoryModal() {
+    //   document.getElementById('uploadMemoryModal').classList.remove('show');
+    //   selectedMemoryFiles = [];
+    // }
+
+    function closeAddSectionModal() {
+      document.getElementById('addSectionModal').classList.remove('show');
+    }
+
+    function closeAddSectionItemModal() {
+      document.getElementById('addSectionItemModal').classList.remove('show');
+      
+      // Reset form data attributes when closing
+      const form = document.getElementById('addSectionItemForm');
+      form.dataset.editMode = 'false';
+      form.dataset.editItemId = '';
+      form.dataset.editSectionId = '';
+      form.dataset.existingFiles = '';
+      
+      // Reset form fields
+      form.reset();
+      document.getElementById('addSectionItemTitle').textContent = 'Add New Item';
+      document.getElementById('addSectionItemSubmitBtn').textContent = 'Add Item';
+      
+      // Reset file upload display
+      document.getElementById('itemFilePreview').innerHTML = '';
+      document.getElementById('selectedFilesContainer').innerHTML = '';
+    }
+
+    function closeSectionModal() {
+      document.getElementById('sectionModal').classList.remove('show');
+    }
+
+    function closeItemGalleryModal() {
+      document.getElementById('itemGalleryModal').classList.remove('show');
+    }
+
+    function closeEditSectionModal() {
+      document.getElementById('editSectionModal').classList.remove('show');
+    }
+
+    // Delete section function
+    async function deleteSection(sectionId) {
+      if (confirm('Are you sure you want to delete this section? This will also delete all items in it.')) {
+        try {
+          await api.deleteSection(sectionId);
+          await loadProfile();
+          toast.success('Section deleted successfully!');
+        } catch (error) {
+          console.error('Error deleting section:', error);
+          toast.error('Error deleting section. Please try again.');
+        }
+      }
+    }
+
+    // Delete section item function
+    async function deleteSectionItem(itemId) {
+      if (confirm('Are you sure you want to delete this item?')) {
+        try {
+          await api.deleteSectionItem(itemId);
+          await loadProfile();
+          toast.success('Item deleted successfully!');
+        } catch (error) {
+          console.error('Error deleting item:', error);
+          toast.error('Error deleting item. Please try again.');
+        }
+      }
+    }
+
+    // Delete section item with confirmation (for modal items)
+    async function deleteSectionItemConfirm(itemId, itemTitle) {
+      if (confirm(`Are you sure you want to delete "${itemTitle}"?`)) {
+        try {
+          await api.deleteSectionItem(itemId);
+          await loadProfile();
+          toast.success('Item deleted successfully!');
+        } catch (error) {
+          console.error('Error deleting item:', error);
+          toast.error('Error deleting item. Please try again.');
+        }
+      }
+    }
+
+    // File upload handling for edit profile modal
+    document.getElementById('editProfilePic').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const selectedFileName = document.getElementById('selectedProfilePicName');
+      const fileNameText = document.getElementById('profilePicNameText');
+      
+      if (file) {
+        fileNameText.textContent = file.name;
+        selectedFileName.classList.remove('hidden');
+        selectedFileName.classList.add('show');
+        
+        // Show file preview
+        const filePreview = document.getElementById('profilePicPreview');
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          filePreview.innerHTML = `
+            <div class="file-preview-container">
+              <img src="${e.target.result}" alt="Preview" class="file-preview">
+              <p class="text-sm text-cyan-custom mt-2">${file.name}</p>
+            </div>
+          `;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        selectedFileName.classList.add('hidden');
+        selectedFileName.classList.remove('show');
+        document.getElementById('profilePicPreview').innerHTML = '';
+      }
+    });
+
+    document.getElementById('editCoverImage').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const selectedFileName = document.getElementById('selectedCoverImageName');
+      const fileNameText = document.getElementById('coverImageNameText');
+      
+      if (file) {
+        fileNameText.textContent = file.name;
+        selectedFileName.classList.remove('hidden');
+        selectedFileName.classList.add('show');
+        
+        // Show file preview
+        const filePreview = document.getElementById('coverImagePreview');
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          filePreview.innerHTML = `
+            <div class="file-preview-container">
+              <img src="${e.target.result}" alt="Preview" class="file-preview">
+              <p class="text-sm text-cyan-custom mt-2">${file.name}</p>
+            </div>
+          `;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        selectedFileName.classList.add('hidden');
+        selectedFileName.classList.remove('show');
+        document.getElementById('coverImagePreview').innerHTML = '';
+      }
+    });
+
+    // Icon Picker functionality
+    let currentIconTarget = null;
+
+    // Open icon picker for different inputs
+    document.getElementById('sectionIconPicker').addEventListener('click', function() {
+      currentIconTarget = 'sectionIcon';
+      document.getElementById('iconPickerModal').classList.add('show');
+    });
+
+    document.getElementById('editSectionIconPicker').addEventListener('click', function() {
+      currentIconTarget = 'editSectionIcon';
+      document.getElementById('iconPickerModal').classList.add('show');
+    });
+
+    document.getElementById('itemIconPicker').addEventListener('click', function() {
+      currentIconTarget = 'itemIcon';
+      document.getElementById('iconPickerModal').classList.add('show');
+    });
+
+    // Close icon picker modal
+    document.getElementById('closeIconPickerModal').addEventListener('click', function() {
+      document.getElementById('iconPickerModal').classList.remove('show');
+      currentIconTarget = null;
+    });
+
+    // Icon selection
+    document.querySelectorAll('.icon-option').forEach(button => {
+      button.addEventListener('click', function() {
+        const selectedIcon = this.getAttribute('data-icon');
+        
+        if (currentIconTarget) {
+          document.getElementById(currentIconTarget).value = selectedIcon;
+        }
+        
+        // Close modal
+        document.getElementById('iconPickerModal').classList.remove('show');
+        currentIconTarget = null;
+        
+        // Show success feedback
+        toast.success(`Icon selected: ${selectedIcon}`);
+      });
+    });
+
+    // Icon search functionality
+    document.getElementById('iconSearchInput').addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      const iconGroups = document.querySelectorAll('.icon-group');
+      
+      iconGroups.forEach(group => {
+        const iconOptions = group.querySelectorAll('.icon-option');
+        let hasVisibleIcons = false;
+        
+        iconOptions.forEach(option => {
+          const iconClass = option.getAttribute('data-icon').toLowerCase();
+          const iconElement = option.querySelector('i');
+          const iconName = iconElement.className.toLowerCase();
+          
+          if (iconClass.includes(searchTerm) || iconName.includes(searchTerm)) {
+            option.style.display = 'block';
+            hasVisibleIcons = true;
+          } else {
+            option.style.display = 'none';
+          }
+        });
+        
+        // Show/hide group header based on visible icons
+        const groupHeader = group.querySelector('h3');
+        if (hasVisibleIcons) {
+          groupHeader.style.display = 'flex';
+        } else {
+          groupHeader.style.display = 'none';
+        }
+      });
+    });
+
+    // Copy Profile URL functionality
+    document.getElementById('copyProfileUrlBtn').addEventListener('click', async function() {
+      try {
+        const profileUrl = document.getElementById('profileUrlDisplay').textContent;
+        await navigator.clipboard.writeText(profileUrl);
+        
+        // Show success message
+        const successMessage = document.getElementById('copySuccessMessage');
+        successMessage.classList.remove('hidden');
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          successMessage.classList.add('hidden');
+        }, 3000);
+        
+        toast.success('Profile URL copied to clipboard!');
+      } catch (error) {
+        console.error('Failed to copy URL:', error);
+        toast.error('Failed to copy URL. Please try again.');
+      }
+    });
+
+
+
+    // Event listeners for modal close buttons
+    document.getElementById('closeEditModal').addEventListener('click', closeEditProfileModal);
+    document.getElementById('cancelEdit').addEventListener('click', closeEditProfileModal);
+    document.getElementById('closeContentModal').addEventListener('click', closeContentEditModal);
+    document.getElementById('cancelContentEdit').addEventListener('click', closeContentEditModal);
+    // document.getElementById('closeMemoryModal').addEventListener('click', closeUploadMemoryModal);
+    // document.getElementById('cancelMemoryUpload').addEventListener('click', closeUploadMemoryModal);
+    document.getElementById('closeAddSectionModal').addEventListener('click', closeAddSectionModal);
+    document.getElementById('cancelAddSection').addEventListener('click', closeAddSectionModal);
+    document.getElementById('closeAddSectionItemModal').addEventListener('click', closeAddSectionItemModal);
+    document.getElementById('cancelAddSectionItem').addEventListener('click', closeAddSectionItemModal);
+    document.getElementById('closeSectionModal').addEventListener('click', closeSectionModal);
+    document.getElementById('closeItemGalleryModal').addEventListener('click', closeItemGalleryModal);
+    document.getElementById('closeEditSectionModal').addEventListener('click', closeEditSectionModal);
+    document.getElementById('cancelEditSection').addEventListener('click', closeEditSectionModal);
+    document.getElementById('closeMediaViewer').addEventListener('click', closeMediaViewer);
+
+    // Gallery modal buttons
+    document.getElementById('editItemBtn').addEventListener('click', () => {
+      if (window.currentGalleryItem) {
+        openEditSectionItemModal(window.currentGalleryItem.sectionId, window.currentGalleryItem.itemId);
+        closeItemGalleryModal();
+      }
+    });
+
+    document.getElementById('deleteItemBtn').addEventListener('click', () => {
+      if (window.currentGalleryItem) {
+        deleteSectionItem(window.currentGalleryItem.itemId);
+        closeItemGalleryModal();
+      }
+    });
+
+    // Section modal buttons
+    document.getElementById('editSectionInModalBtn').addEventListener('click', () => {
+      if (window.currentSectionModal) {
+        openEditSectionModal(window.currentSectionModal.sectionId);
+        closeSectionModal();
+      }
+    });
+
+    document.getElementById('deleteSectionInModalBtn').addEventListener('click', () => {
+      if (window.currentSectionModal) {
+        deleteSection(window.currentSectionModal.sectionId);
+        closeSectionModal();
+      }
+    });
+
+    // Close modals when clicking outside
+    document.getElementById('editProfileModal').addEventListener('click', (e) => {
+      if (e.target.id === 'editProfileModal') {
+        closeEditProfileModal();
+      }
+    });
+
+    document.getElementById('contentEditModal').addEventListener('click', (e) => {
+      if (e.target.id === 'contentEditModal') {
+        closeContentEditModal();
+      }
+    });
+
+    // document.getElementById('uploadMemoryModal').addEventListener('click', (e) => {
+    //   if (e.target.id === 'uploadMemoryModal') {
+    //     closeUploadMemoryModal();
+    //   }
+    // });
+
+    document.getElementById('addSectionModal').addEventListener('click', (e) => {
+      if (e.target.id === 'addSectionModal') {
+        closeAddSectionModal();
+      }
+    });
+
+    document.getElementById('addSectionItemModal').addEventListener('click', (e) => {
+      if (e.target.id === 'addSectionItemModal') {
+        closeAddSectionItemModal();
+      }
+    });
+
+    document.getElementById('sectionModal').addEventListener('click', (e) => {
+      if (e.target.id === 'sectionModal') {
+        closeSectionModal();
+      }
+    });
+
+    document.getElementById('itemGalleryModal').addEventListener('click', (e) => {
+      if (e.target.id === 'itemGalleryModal') {
+        closeItemGalleryModal();
+      }
+    });
+
+    document.getElementById('editSectionModal').addEventListener('click', (e) => {
+      if (e.target.id === 'editSectionModal') {
+        closeEditSectionModal();
+      }
+    });
+
+    document.getElementById('mediaViewer').addEventListener('click', (e) => {
+      if (e.target.id === 'mediaViewer') {
+        closeMediaViewer();
+      }
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeEditProfileModal();
+        closeContentEditModal();
+        closeUploadMemoryModal();
+        closeAddSectionModal();
+        closeAddSectionItemModal();
+        closeSectionModal();
+        closeItemGalleryModal();
+        closeEditSectionModal();
+        closeMediaViewer();
+      }
+    });
+
+    // Initialize app
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProfile();
+    });
+
+    // View full-size cover image in modal
+    document.getElementById('coverImage').addEventListener('click', () => {
+      const src = document.getElementById('coverImage').src;
+      const imageName = src.split('/').pop();
+      openMediaViewer('image', `uploads/${imageName}`);
+    });
+
+    // View full-size profile picture in modal
+    document.getElementById('profilePic').addEventListener('click', () => {
+      const src = document.getElementById('profilePic').src;
+      const imageName = src.split('/').pop();
+      openMediaViewer('image', `uploads/${imageName}`);
+    });
+
+    // Add this utility to show image in modal
+    function openMediaViewer(type, filePath) {
+      const container = document.getElementById('mediaContainer');
+      container.innerHTML = type === 'image'
+        ? `<img src="${filePath}" alt="Full Image" style="max-width: 100%; max-height: 80vh; object-fit: contain;" />`
+        : `<video controls src="${filePath}" style="max-width: 100%; max-height: 80vh;"></video>`;
+      document.getElementById('mediaViewer').classList.add('show');
+    }
+
+    // Update file count display in item list
+    function updateFileCountDisplay() {
+      const form = document.getElementById('addSectionItemForm');
+      const existingFilesData = form.dataset.existingFiles;
+      let fileCount = 0;
+      
+      if (existingFilesData) {
+        try {
+          const existingFiles = JSON.parse(existingFilesData);
+          fileCount = existingFiles.length;
+        } catch (e) {
+          console.error('Error parsing existing files:', e);
+        }
+      }
+      
+      // Update the file count display in the current modal
+      const fileCountElements = document.querySelectorAll('.text-xs.text-cyan-custom');
+      fileCountElements.forEach(element => {
+        if (element.textContent.includes('file') && element.textContent.includes('attached')) {
+          if (fileCount === 0) {
+            element.style.display = 'none';
+          } else if (fileCount === 1) {
+            element.innerHTML = '<i class="fa-solid fa-paperclip"></i> File attached';
+            element.style.display = 'block';
+          } else {
+            element.innerHTML = `<i class="fa-solid fa-paperclip"></i> ${fileCount} files attached`;
+            element.style.display = 'block';
+          }
+        }
+      });
+      
+      // Also update the selected files container count
+      const selectedFilesContainer = document.getElementById('selectedFilesContainer');
+      if (selectedFilesContainer) {
+        const fileItems = selectedFilesContainer.querySelectorAll('[data-file-index]');
+        const existingFileItems = selectedFilesContainer.querySelectorAll('[data-existing-file]');
+        const totalFiles = fileItems.length + existingFileItems.length;
+        
+        // Update any file count displays in the modal
+        const modalFileCounts = selectedFilesContainer.parentElement.querySelectorAll('.text-xs.text-cyan-custom');
+        modalFileCounts.forEach(element => {
+          if (element.textContent.includes('file') && element.textContent.includes('attached')) {
+            if (totalFiles === 0) {
+              element.style.display = 'none';
+            } else if (totalFiles === 1) {
+              element.innerHTML = '<i class="fa-solid fa-paperclip"></i> File attached';
+              element.style.display = 'block';
+            } else {
+              element.innerHTML = `<i class="fa-solid fa-paperclip"></i> ${totalFiles} files attached`;
+              element.style.display = 'block';
+            }
+          }
+        });
+      }
+    }
+
+    // Gallery pagination function
+    function changeGalleryPage(direction) {
+      if (!window.currentGalleryFiles) return;
+      
+      const newPage = window.currentGalleryPage + direction;
+      if (newPage < 0 || newPage >= window.currentGalleryTotalPages) return;
+      
+      window.currentGalleryPage = newPage;
+      
+      // Re-render the gallery
+      const imageContainer = document.getElementById('galleryImageContainer');
+      const files = window.currentGalleryFiles;
+      const filesPerPage = 8;
+      const totalPages = window.currentGalleryTotalPages;
+      
+      // No pagination controls needed - using existing buttons
+      let paginationHTML = '';
+      
+      // Create gallery grid
+      let galleryHTML = paginationHTML + '<div class="grid grid-cols-2 md:grid-cols-4 gap-4">';
+      
+      const startIndex = window.currentGalleryPage * filesPerPage;
+      const endIndex = Math.min(startIndex + filesPerPage, files.length);
+      
+      for (let i = startIndex; i < endIndex; i++) {
+        const file = files[i];
+        if (file.type === 'image') {
+          galleryHTML += `
+            <div class="relative group">
+              <img src="/uploads/${file.path}" class="w-full h-32 md:h-40 object-cover rounded-lg border border-cyan-custom/30" alt="Gallery Image">
+              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 rounded-lg flex items-center justify-center">
+                <button onclick="openMediaViewer('image', '/uploads/${file.path}')" class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-cyan-custom text-dark-bg px-3 py-1 rounded text-sm font-bold">
+                  <i class="fa-solid fa-expand mr-1"></i>View
+                </button>
+              </div>
+            </div>
+          `;
+        } else if (file.type === 'video') {
+          galleryHTML += `
+            <div class="relative group">
+              <video class="w-full h-32 md:h-40 object-cover rounded-lg border border-cyan-custom/30" controls>
+                <source src="/uploads/${file.path}" type="video/mp4">
+              </video>
+              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 rounded-lg flex items-center justify-center">
+                <button onclick="openMediaViewer('video', '/uploads/${file.path}')" class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-cyan-custom text-dark-bg px-3 py-1 rounded text-sm font-bold">
+                  <i class="fa-solid fa-expand mr-1"></i>View
+                </button>
+              </div>
+            </div>
+          `;
+        } else {
+          galleryHTML += `
+            <div class="relative group bg-item-bg p-3 rounded-lg border border-cyan-custom/30 flex items-center justify-center h-32 md:h-40">
+              <div class="text-center">
+                <i class="fa-solid fa-file text-2xl text-cyan-custom mb-1"></i>
+                <p class="text-white text-xs">${file.path}</p>
+                <a href="/uploads/${file.path}" download class="mt-1 inline-block bg-cyan-custom text-dark-bg px-2 py-1 rounded text-xs hover:bg-orange-custom transition-colors">
+                  <i class="fa-solid fa-download mr-1"></i>Download
+                </a>
+              </div>
+            </div>
+          `;
+        }
+      }
+      
+      galleryHTML += '</div>';
+      imageContainer.innerHTML = galleryHTML;
+    }
+
+    // Modal close function (already exists, just reused)
+    function closeMediaViewer() {
+      document.getElementById('mediaViewer').classList.remove('show');
+      document.getElementById('mediaContainer').innerHTML = '';
+    }
+
+
+
+  </script>
+</body>
+
+</html>
