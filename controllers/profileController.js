@@ -23,10 +23,14 @@ const getUserId = async (profileId) => {
 // Create new profile
 const createProfile = async (req, res) => {
   try {
-    const { name, username, intro_text, highlights, password } = req.body;
+    const { name, username, intro_text, highlights, password, securityCode } = req.body;
     
     if (!name || !username || !intro_text || !highlights) {
       return res.status(400).json({ error: 'Name, username, intro text, and highlights are required' });
+    }
+
+    if (!securityCode || typeof securityCode !== 'string' || securityCode.trim().length < 2) {
+      return res.status(400).json({ error: 'Security code is required (min 2 characters)' });
     }
 
     // Validate username format
@@ -66,6 +70,15 @@ const createProfile = async (req, res) => {
         // Ignore if column doesn't exist yet; log for visibility
         console.warn('Password not stored (likely missing password_hash column):', e.code || e.message);
       }
+    }
+
+    // Store security code hash (tolerate if column not present yet)
+    try {
+      const salt2 = await bcrypt.genSalt(10);
+      const scHash = await bcrypt.hash(securityCode.trim(), salt2);
+      await pool.execute('UPDATE users SET security_code_hash = ? WHERE id = ?', [scHash, userId]);
+    } catch (e) {
+      console.warn('Security code not stored (likely missing security_code_hash column):', e.code || e.message);
     }
     
     // Handle profile picture
@@ -142,12 +155,12 @@ const login = async (req, res) => {
   }
 };
 
-// Forgot password controller (sets a new password directly by username)
+// Forgot password controller (requires matching security code)
 const forgotPassword = async (req, res) => {
   try {
-    const { username, newPassword, confirmPassword } = req.body;
-    if (!username || !newPassword || !confirmPassword) {
-      return res.status(400).json({ error: 'Username, new password, and confirm password are required' });
+    const { username, securityCode, newPassword, confirmPassword } = req.body;
+    if (!username || !newPassword || !confirmPassword || !securityCode) {
+      return res.status(400).json({ error: 'Username, security code, new password, and confirm password are required' });
     }
     if (newPassword !== confirmPassword) {
       return res.status(400).json({ error: 'Passwords do not match' });
@@ -156,9 +169,19 @@ const forgotPassword = async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 6 characters' });
     }
 
-    const [rows] = await pool.execute('SELECT id FROM users WHERE username = ?', [username]);
+    const [rows] = await pool.execute('SELECT id, security_code_hash FROM users WHERE username = ?', [username]);
     if (rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Verify security code
+    const user = rows[0];
+    if (!user.security_code_hash) {
+      return res.status(400).json({ error: 'Security code not set for this account' });
+    }
+    const scOk = await bcrypt.compare(String(securityCode), user.security_code_hash);
+    if (!scOk) {
+      return res.status(401).json({ error: 'Invalid security code' });
     }
 
     const salt = await bcrypt.genSalt(10);

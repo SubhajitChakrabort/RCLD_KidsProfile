@@ -379,6 +379,25 @@
 
         <div>
           <label class="block text-white mb-2 font-semibold">
+            <i class="fa-solid fa-user-secret text-orange-custom mr-2"></i>
+            Security Code
+          </label>
+          <input 
+            type="text" 
+            id="securityCode" 
+            class="input-field w-full" 
+            placeholder="e.g., your nickname, birthplace, favorite place, or pet name"
+            minlength="2"
+            required
+          >
+          <p class="text-xs text-gray-400 mt-1">
+            <i class="fa-solid fa-info-circle mr-1"></i>
+            This will be used to verify your identity if you forget your password.
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-white mb-2 font-semibold">
             <i class="fa-solid fa-comment text-orange-custom mr-2"></i>
             Intro Text
           </label>
@@ -672,6 +691,11 @@
           throw new Error('Password must be at least 6 characters');
         }
         formData.append('password', pwd);
+        const sec = document.getElementById('securityCode').value;
+        if (!sec || sec.trim().length < 2) {
+          throw new Error('Security code must be at least 2 characters');
+        }
+        formData.append('securityCode', sec);
         formData.append('intro_text', document.getElementById('introText').value);
         formData.append('highlights', document.getElementById('highlights').value);
         
