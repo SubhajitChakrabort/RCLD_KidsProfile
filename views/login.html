@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Kids Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body { background: linear-gradient(135deg, #1e223c, #0f1020); }
+    .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+    .input-field { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 12px; padding: 12px 14px; outline: none; width: 100%; }
+    .input-field:focus { border-color: #4fc3f7; box-shadow: 0 0 0 3px rgba(79,195,247,0.2); }
+    .btn { background: linear-gradient(135deg, #4fc3f7, #ffb74d); color: #0f1020; font-weight: 700; border-radius: 12px; padding: 12px 16px; }
+    .btn:hover { filter: brightness(1.05); }
+    .link { color: #4fc3f7; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 text-white">
+  <div class="card max-w-md w-full p-8 rounded-2xl">
+    <div class="text-center mb-6">
+      <div class="text-5xl text-[#ffb74d] mb-3"><i class="fa-solid fa-right-to-bracket"></i></div>
+      <h1 class="text-3xl font-bold text-[#4fc3f7]">Welcome Back</h1>
+      <p class="text-gray-300 text-sm">Login to manage your profile</p>
+    </div>
+
+    <form id="loginForm" class="space-y-5">
+      <div>
+        <label class="block text-sm mb-2"><i class="fa-solid fa-at text-[#ffb74d] mr-2"></i>Username</label>
+        <input id="username" type="text" class="input-field" placeholder="your_username" required pattern="[a-zA-Z0-9_]+" />
+      </div>
+      <div>
+        <label class="block text-sm mb-2"><i class="fa-solid fa-lock text-[#ffb74d] mr-2"></i>Password</label>
+        <input id="password" type="password" class="input-field" placeholder="••••••" required minlength="6" />
+      </div>
+      <button class="btn w-full" type="submit"><i class="fa-solid fa-right-to-bracket mr-2"></i>Login</button>
+    </form>
+
+    <div id="status" class="mt-4 text-sm"></div>
+
+    <div class="mt-6 text-center text-sm">
+      <a href="/forgot-password" class="link hover:underline"><i class="fa-solid fa-key mr-1"></i>Forgot password?</a>
+    </div>
+
+    <div class="mt-2 text-center text-xs text-gray-400">
+      New here? <a href="/create-profile" class="link hover:underline">Create a profile</a>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const status = document.getElementById('status');
+
+    function decodeJwt(token) {
+      try {
+        const payload = token.split('.')[1];
+        const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+        return JSON.parse(decodeURIComponent(escape(json)));
+      } catch {
+        return null;
+      }
+    }
+
+    // If already logged in (and not expired), redirect to profile
+    (function autoRedirectIfLoggedIn() {
+      const token = localStorage.getItem('auth_token');
+      const loginAt = parseInt(localStorage.getItem('auth_login_time') || '0', 10);
+      const maxAgeMs = 4 * 60 * 60 * 1000; // 4 hours
+      if (loginAt && Date.now() - loginAt > maxAgeMs) {
+        // Expired session
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_login_time');
+        return;
+      }
+      if (token) {
+        const data = decodeJwt(token);
+        if (data && data.username) {
+          window.location.href = `/@${data.username}`;
+        }
+      }
+    })();
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = '';
+
+      const body = {
+        username: document.getElementById('username').value.trim(),
+        password: document.getElementById('password').value
+      };
+
+      try {
+        const res = await fetch('/api/profile/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (res.status === 404) {
+          // User not found, send to create profile
+          status.className = 'mt-4 text-sm text-yellow-400';
+          status.textContent = 'Account not found. Redirecting to create profile...';
+          setTimeout(() => { window.location.href = '/create-profile'; }, 700);
+          return;
+        }
+        if (!res.ok) throw new Error(data.error || 'Login failed');
+        localStorage.setItem('auth_token', data.token);
+        localStorage.setItem('auth_login_time', Date.now().toString());
+        const payload = decodeJwt(data.token);
+        const username = payload && payload.username ? payload.username : null;
+        status.className = 'mt-4 text-sm text-green-400';
+        status.textContent = 'Login successful! Redirecting...';
+        setTimeout(() => {
+          window.location.href = username ? `/@${username}` : '/';
+        }, 600);
+      } catch (err) {
+        status.className = 'mt-4 text-sm text-red-400';
+        status.textContent = err.message;
+      }
+    });
+  </script>
+</body>
+</html>

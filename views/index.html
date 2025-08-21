@@ -1049,6 +1049,25 @@
 </head>
 
 <body class="m-0 p-0 bg-dark-bg text-white min-h-screen relative overflow-x-hidden">
+  <script>
+    (function authGuard(){
+      try {
+        const t = localStorage.getItem('auth_token');
+        const loginAt = parseInt(localStorage.getItem('auth_login_time') || '0', 10);
+        const maxAgeMs = 4 * 60 * 60 * 1000; // 4 hours
+        if (!t) return location.replace('/login');
+        if (loginAt && Date.now() - loginAt > maxAgeMs) {
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('auth_login_time');
+          return location.replace('/login');
+        }
+        const payload = JSON.parse(decodeURIComponent(escape(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')))));
+        if (!payload || !payload.username) return location.replace('/login');
+      } catch (e) {
+        return location.replace('/login');
+      }
+    })();
+  </script>
 
   <!-- Animated stars background -->
   <div class="stars fixed top-0 left-0 w-screen h-screen pointer-events-none z-0"></div>
@@ -1068,6 +1087,9 @@
         </button> -->
         <button id="addSectionBtn" class="text-white hover:text-orange-custom transition-colors">
           <i class="fa-solid fa-plus"></i> Add Section
+        </button>
+        <button id="logoutBtn" class="text-white hover:text-red-custom transition-colors">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
         </button>
       </div>
     </div>
@@ -1174,6 +1196,31 @@
     </section>
   </main>
 
+  <script>
+    // Manual logout and auto-logout timer
+    document.addEventListener('DOMContentLoaded', () => {
+      const logout = () => {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_login_time');
+        location.replace('/login');
+      };
+
+      const btn = document.getElementById('logoutBtn');
+      if (btn) btn.addEventListener('click', logout);
+
+      const loginAt = parseInt(localStorage.getItem('auth_login_time') || '0', 10);
+      const maxAgeMs = 4 * 60 * 60 * 1000; // 4 hours
+      if (loginAt) {
+        const elapsed = Date.now() - loginAt;
+        const remaining = maxAgeMs - elapsed;
+        if (remaining <= 0) {
+          return logout();
+        }
+        // Schedule auto logout when time elapses
+        setTimeout(logout, remaining);
+      }
+    });
+  </script>
   <!-- Edit Profile Modal -->
   <div id="editProfileModal" class="edit-form">
     <div class="form-content">

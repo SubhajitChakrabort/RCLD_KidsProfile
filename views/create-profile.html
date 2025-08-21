@@ -360,6 +360,25 @@
 
         <div>
           <label class="block text-white mb-2 font-semibold">
+            <i class="fa-solid fa-lock text-orange-custom mr-2"></i>
+            Password
+          </label>
+          <input 
+            type="password" 
+            id="password" 
+            class="input-field w-full" 
+            placeholder="Create a password (min 6 chars)"
+            minlength="6"
+            required
+          >
+          <p class="text-xs text-gray-400 mt-1">
+            <i class="fa-solid fa-shield-halved mr-1"></i>
+            Your password is securely stored.
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-white mb-2 font-semibold">
             <i class="fa-solid fa-comment text-orange-custom mr-2"></i>
             Intro Text
           </label>
@@ -648,6 +667,11 @@
         const formData = new FormData();
         formData.append('name', document.getElementById('userName').value);
         formData.append('username', document.getElementById('username').value);
+        const pwd = document.getElementById('password').value;
+        if (!pwd || pwd.length < 6) {
+          throw new Error('Password must be at least 6 characters');
+        }
+        formData.append('password', pwd);
         formData.append('intro_text', document.getElementById('introText').value);
         formData.append('highlights', document.getElementById('highlights').value);
         
@@ -696,6 +720,10 @@
         document.getElementById('viewProfileBtn').addEventListener('click', () => {
           window.location.href = usernameUrl;
         });
+
+        // Also guide to login and redirect automatically
+        toast.success('Profile created! Redirecting to login...');
+        setTimeout(() => { window.location.href = '/login'; }, 1200);
 
       } catch (error) {
         console.error('Error creating profile:', error);

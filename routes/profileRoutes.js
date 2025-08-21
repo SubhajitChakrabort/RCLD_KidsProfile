@@ -7,7 +7,9 @@ const {
   updateCoverImage,
   createProfile,
   getProfileById,
-  getProfileByUsername
+  getProfileByUsername,
+  login,
+  forgotPassword
 } = require('../controllers/profileController');
 const { authenticateUser } = require('../middleware/auth');
 const { uploadProfilePic, uploadCoverImage, uploadContent } = require('../config/cloudinary');
@@ -32,6 +34,10 @@ router.post('/cover', uploadCoverImage.single('coverImage'), updateCoverImage);
 
 // Get profile by username (no auth required)
 router.get('/username/:username', getProfileByUsername);
+
+// Auth routes
+router.post('/login', login);
+router.post('/forgot-password', forgotPassword);
 
 // Get profile by ID (no auth required) - must come last
 router.get('/:profileId', getProfileById);

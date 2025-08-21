@@ -2,6 +2,8 @@ const { pool } = require('../config/db');
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { deleteFromCloudinary, getPublicIdFromUrl } = require('../config/cloudinary');
 
 // Helper function to get user ID from profile ID or use default
@@ -21,7 +23,7 @@ const getUserId = async (profileId) => {
 // Create new profile
 const createProfile = async (req, res) => {
   try {
-    const { name, username, intro_text, highlights } = req.body;
+    const { name, username, intro_text, highlights, password } = req.body;
     
     if (!name || !username || !intro_text || !highlights) {
       return res.status(400).json({ error: 'Name, username, intro text, and highlights are required' });
@@ -46,13 +48,25 @@ const createProfile = async (req, res) => {
     // Generate unique profile ID
     const profileId = uuidv4().replace(/-/g, '').substring(0, 12);
     
-    // Create user record
+    // Create user record (base fields)
     const [userResult] = await pool.execute(
       'INSERT INTO users (profile_id, username, name, intro_text) VALUES (?, ?, ?, ?)',
       [profileId, username, name, intro_text]
     );
     
     const userId = userResult.insertId;
+
+    // If password provided, hash and update (tolerate if column not present yet)
+    if (password && typeof password === 'string' && password.length >= 6) {
+      try {
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+        await pool.execute('UPDATE users SET password_hash = ? WHERE id = ?', [hash, userId]);
+      } catch (e) {
+        // Ignore if column doesn't exist yet; log for visibility
+        console.warn('Password not stored (likely missing password_hash column):', e.code || e.message);
+      }
+    }
     
     // Handle profile picture
     let profilePictureUrl = null;
@@ -90,6 +104,70 @@ const createProfile = async (req, res) => {
     });
   } catch (error) {
     console.error('Error creating profile:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Login controller
+const login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Username and password are required' });
+    }
+
+    const [rows] = await pool.execute('SELECT id, username, password_hash FROM users WHERE username = ?', [username]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = rows[0];
+    if (!user.password_hash) {
+      return res.status(401).json({ error: 'Password not set for this account' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password_hash);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET || 'dev_secret_change_me', {
+      expiresIn: '7d'
+    });
+
+    res.json({ token });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Forgot password controller (sets a new password directly by username)
+const forgotPassword = async (req, res) => {
+  try {
+    const { username, newPassword, confirmPassword } = req.body;
+    if (!username || !newPassword || !confirmPassword) {
+      return res.status(400).json({ error: 'Username, new password, and confirm password are required' });
+    }
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: 'Passwords do not match' });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+
+    const [rows] = await pool.execute('SELECT id FROM users WHERE username = ?', [username]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newPassword, salt);
+    await pool.execute('UPDATE users SET password_hash = ? WHERE username = ?', [hash, username]);
+
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Forgot password error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -374,5 +452,7 @@ module.exports = {
   getProfile,
   updateProfile,
   updateProfilePicture,
-  updateCoverImage
+  updateCoverImage,
+  login,
+  forgotPassword
 };

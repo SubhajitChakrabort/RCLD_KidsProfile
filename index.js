@@ -30,8 +30,22 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/memories', memoryRoutes);
 app.use('/api/sections', sectionsRoutes);
-// Serve main HTML file for root
+
+// Serve login as root
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'login.html'));
+});
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'login.html'));
+});
+
+app.get('/forgot-password', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'forgot-password.html'));
+});
+
+// Create profile page
+app.get('/create-profile', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'create-profile.html'));
 });
 
