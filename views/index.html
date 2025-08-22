@@ -4523,18 +4523,32 @@
       loadProfile();
     });
 
+    // Resolve an image URL to a loadable path
+    function resolveImageUrl(src) {
+      if (!src) return '';
+      // Absolute URL (http/https) or already in uploads
+      if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('/uploads/')) {
+        return src;
+      }
+      // If it's an absolute path not under uploads, use as-is
+      if (src.startsWith('/')) return src;
+      // Otherwise treat as filename and serve from uploads
+      const name = src.split('/').pop();
+      return `/uploads/${name}`;
+    }
+
     // View full-size cover image in modal
     document.getElementById('coverImage').addEventListener('click', () => {
-      const src = document.getElementById('coverImage').src;
-      const imageName = src.split('/').pop();
-      openMediaViewer('image', `uploads/${imageName}`);
+      const raw = document.getElementById('coverImage').getAttribute('src');
+      const resolved = resolveImageUrl(raw || document.getElementById('coverImage').src);
+      openMediaViewer('image', resolved);
     });
 
     // View full-size profile picture in modal
     document.getElementById('profilePic').addEventListener('click', () => {
-      const src = document.getElementById('profilePic').src;
-      const imageName = src.split('/').pop();
-      openMediaViewer('image', `uploads/${imageName}`);
+      const raw = document.getElementById('profilePic').getAttribute('src');
+      const resolved = resolveImageUrl(raw || document.getElementById('profilePic').src);
+      openMediaViewer('image', resolved);
     });
 
     // Add this utility to show image in modal

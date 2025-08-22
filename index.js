@@ -18,6 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static files
 app.use(express.static('public'));
+// Serve uploaded files (local uploads directory)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Set views directory
 app.set('views', path.join(__dirname, 'views'));
